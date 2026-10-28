@@ -1,193 +1,24 @@
-/* ---------------------- Home Banner Styling ---------------------- */
-
-.home_container{
-    display: flex;
-    flex-direction: column;
-    background-color: var(--secondary-light-blue);
-    color: var(--neutral-charcoal-gray);
-    height: 100%;
-}
-
-.home_banner{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    height: 100%;
-    cursor: default;
-    background-image:url(https://images.unsplash.com/photo-1546707012-0c9f63ba29b9?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
-    background-position: center;
-    text-shadow: 4px 4px 8px var(--secondary-soft-purple);
-}
-.home_features{
-    background-color: var(--secondary-light-blue);
-}
-
-/* ---------------------- Home Banner Left Box Styling ---------------------- */
-
-.home_banner_left_box{
-    display: flex;
-    flex-direction: column;
-    align-self: self-start;
-    justify-content: center;
-    margin:  50px 0px;
-
-}
-
-.home_banner_left_box h1{
-    font-size: 7em;
-    display: inline-block; 
-    transition: transform 0.3s ease-in-out;
-    padding: 0px 20px;
-}
-
-.home_banner_bounce_letter {
-    display: inline-block;
-    transition: transform 0.3s ease-in-out;
-    text-shadow: 4px 4px 8px var(--secondary-soft-purple);
-}
-
-.home_banner_bounce_letter:hover {
-    animation: bounce 0.5s ease-in-out;
-}
-
-@keyframes bounce {
-    0%, 100% {
-        text-shadow: 4px 4px 8px var(--secondary-soft-purple);
-        transform: translateY(0);
-    }
-    50% {
-        text-shadow: 2px 2px 4px var(--secondary-soft-purple);
-        transform: translateY(-25px); 
-    }
-}
-
-.home_banner_slogan{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.home_banner_slogan span:nth-child(1) {
-    align-self: flex-start; 
-    transition: transform .25s ease-in-out;
-}
-
-.home_banner_slogan span:nth-child(2) {
-    align-self: center; 
-    transition: transform 0.25s ease-in-out;
-}
-
-.home_banner_slogan span:nth-child(3) {
-    align-self: flex-end;
-    transition: transform 0.25s ease-in-out;
-}
-
-.home_banner_slogan span:nth-child(1):hover, .home_banner_slogan span:nth-child(2):hover, .home_banner_slogan span:nth-child(3):hover  {
-    transform: scale(1.1) rotate(5deg); 
-}
-
-/* ---------------------- Home Banner Right Box Styling ---------------------- */
-
-.home_banner_right_box {
-    width: 300px; 
-    height: 300px; 
-    border-radius: 50%;
-    background: linear-gradient(45deg, rgb(240, 240, 240), rgba(209, 232, 255, 0.8)); 
-    padding: 10px; 
-    background-clip: border-box; 
-    background-origin: border-box;
-}
-.home_banner_right_box_circle {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    justify-content: center;
-    border-radius: 50%;
-    width: 100%; 
-    height: 100%; 
-}
-
-.home_banner_right_box_circle img {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.home_banner_right_box_circle p {
-    font-size: .75em;
-    text-align: center
-}
-
-.home_banner_right_box_button button{
-    background-color: var(--secondary-light-blue); 
-    color: var(--neutral-charcoal-gray);
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.home_banner_right_box_button button:hover {
-    background-color: var(--primary-bright-cyan); 
-    color: white;
-}
-
-.home_banner_right_box_loading{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 300px; 
-    height: 300px; 
-    border-radius: 50%;
-    background: linear-gradient(90deg, #1E3A8A, rgba(209, 232, 255));
-    padding: 10px; 
-    background-size: 200% 200%;
-    background-clip: border-box; 
-    background-origin: border-box;
-    animation: moveGradient 3s ease-in-out infinite;
-}
-.home_banner_right_box_loading p{
-    font-size: 3em;
-    text-shadow: 2px 2px 4px var(--secondary-light-blue);
-}
-
-@keyframes moveGradient {
-    0% {
-        background-position: 0% 0%;
-    }
-    50% {
-        background-position: 100% 0%;
-    }
-    100% {
-        background-position: 0% 0%; 
-    }
-}
-
-/* ---------------------- Home features Styling ---------------------- */
-
-.home_features{
-    display: flex;
-    flex-direction: row;
-    padding: 50px 20px;
-    background-color: var(--neutral-white);
-    
-}
-
-.home_features_box{
-    padding-right: 20px;
-    padding-left: 5px;
-    flex: 1;
-    text-align: center;
-    border-right: 2px solid var(--secondary-light-blue);
-}
-
-.home_features_box:hover{
-    border-right: none;
-    border-left: 2px solid var(--secondary-light-blue);
-    text-shadow: 1px 1px 4px var(--secondary-soft-purple);
-}
+.home_container { background: #eaf5ff; color: #0a2148; padding-bottom: 48px; }
+.home_hero { min-height: 440px; background: linear-gradient(90deg, rgba(1, 15, 38, .88), rgba(1, 15, 38, .05)), url('../Components/Organization/concert-hero.png') center/cover; }
+.home_hero_content { max-width: 1200px; margin: auto; padding: 80px 24px 128px; }
+.home_hero h1 { color: white; max-width: 580px; font-size: clamp(2.75rem, 5vw, 4.75rem); line-height: 1.03; letter-spacing: -.035em; font-weight: 750; margin: 0 0 20px; }
+.home_hero h1 span { display: block; color: #99e8ff; }
+.home_hero p { color: white; max-width: 440px; font-size: 1.15rem; line-height: 1.5; margin-bottom: 24px; }
+.home_primary { display: inline-flex; min-height: 48px; align-items: center; padding: 10px 24px; border-radius: 28px; background: #83dfff; color: #061d3c; font-weight: 700; text-decoration: none; }
+.home_featured { position: relative; max-width: 1200px; margin: -56px auto 0; padding: 32px; background: #f8fbff; border-radius: 24px; }
+.home_section_heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; }
+.home_section_heading h2, .home_community h2 { color: #0a2148; margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 750; }
+.home_section_heading a, .home_person a { color: #075dbb; }
+.home_event_grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.home_event_card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(13, 44, 76, .07); }
+.home_event_card img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.home_event_card div { padding: 16px; }
+.home_event_card h3 { font-size: 1.1rem; color: #0a2148; margin: 0 0 8px; }
+.home_event_card p { margin: 4px 0; color: #385376; }
+.home_community { max-width: 1200px; margin: 0 auto; padding: 48px 32px 0; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.home_person { display: flex; gap: 16px; align-items: center; }
+.home_person img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
+.home_person p, .home_community p { margin: 4px 0 0; }
+.home_person button { background: white; color: #0a2148; border: 1px solid #385376; border-radius: 8px; padding: 10px 16px; min-height: 44px; }
+.home_container a:focus-visible, .home_container button:focus-visible { outline: 3px solid #075dbb; outline-offset: 3px; }
+@media (max-width: 700px) { .home_hero_content { padding: 64px 20px 112px; } .home_featured { margin: -48px 16px 0; padding: 24px 20px; } .home_event_grid { grid-template-columns: 1fr; } .home_section_heading, .home_community, .home_person { align-items: flex-start; flex-direction: column; } .home_community { padding: 32px 20px 0; } }

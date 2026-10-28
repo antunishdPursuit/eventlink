@@ -1,5 +1,5 @@
 // DEPENDENCIES
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // PAGES
 import Edit from "./Pages/Edit";
@@ -16,7 +16,6 @@ import Footer from "./Components/Organization/Footer";
 function App() {
   return (
     <div className="App">
-      <Router>
         <NavBar />
         <main>
           <Routes>
@@ -30,7 +29,6 @@ function App() {
           </Routes>
         </main>
         <Footer />
-      </Router>
     </div>
   );
 }
