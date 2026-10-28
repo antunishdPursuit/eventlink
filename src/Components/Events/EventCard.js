@@ -23,7 +23,7 @@ function User({ event, handleDelete, toggleView }) {
             </div>
             <div className="d-flex flex-column">
                 <h5 className="card-subtitle">In {event.city} at {event.venue}</h5>
-                <p className="card-text">Min Price: ${event.price}</p>
+                <p className="card-text">{event.price == null ? 'Price unavailable' : `Min Price: $${event.price}`}</p>
             </div>
             <button className="btn btn-primary" onClick={toggleView}>Edit</button>
             <button className="btn btn-danger" onClick={() => handleDelete(event.id)}>Delete</button>

@@ -23,13 +23,14 @@ function UserSearch({user, handleAddEvents}) {
             .get(
     `https://app.ticketmaster.com/discovery/v2/events.json?size=10&pages=1&apikey=${api}&${search}`)
             .then((response) => {
-                setEventsTicketmaster(response.data._embedded.events)
+                setEventsTicketmaster(response.data._embedded?.events || [])
                 setIsLoading(false);
                 setNoEvents(false)
 
             })
             .catch((c) => {
                 setNoEvents(true)
+                setIsLoading(false)
                 console.warn("catch", c);
             });
       } catch (error) {

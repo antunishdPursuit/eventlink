@@ -17,13 +17,13 @@ function Events({newEventToAdd}) {
       });
   }, [id, newEventToAdd]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (eventId) => {
     axios
-      .delete(`${API}/users/${id}/events/${id}`)
+      .delete(`${API}/users/${id}/events/${eventId}`)
       .then(
         (response) => {
           setEvents((prevEvents) =>
-          prevEvents.filter((event) => event.id !== id)
+          prevEvents.filter((event) => event.id !== eventId)
         );
         },
         (error) => console.error(error)
