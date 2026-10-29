@@ -48,8 +48,8 @@ function Users() {
     
 
   return (
-    <div className="row">
-        <div className="col-3 sort-box">
+    <div className="people-directory">
+        <div className="sort-box">
             {/* Sort box */}
             <div className="card sort-box-2">
                 <div className="card-body">
@@ -93,12 +93,10 @@ function Users() {
             </div>
         </div>
         {/* Displaying Users */}
-        <div className="col">
-            <div className="row">
+        <div className="people-grid">
                 {users.map((user) => {
                     return <User key={user.id} user={user} />;
                 })}
-            </div>
         </div>
     </div>
   );

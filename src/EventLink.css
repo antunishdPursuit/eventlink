@@ -68,3 +68,20 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
   .profile-form-page form > .row > .col-6, .profile-form-page form > .row > .col-auto { width: 100%; flex: 0 0 100%; }
   .profile-form-page > .row > .col-md-auto { padding: 24px 20px; }
 }
+
+/* People directory */
+.people-directory .sort-box { width: 100%; margin: 0 0 24px; }
+.people-directory .sort-box-2 { background: transparent; border: 0; overflow: visible; }
+.people-directory .sort-box-2 .card-body { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 0; }
+.people-directory .sort-box-2 .card-title { margin: 0; font-size: 1rem; font-weight: 700; }
+.people-directory .sort-box-2 .form-check { margin: 0; }
+.people-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.people-grid-item { min-width: 0; }
+.people-grid .card-box { height: 100%; margin: 0; padding: 16px; box-shadow: 0 4px 16px rgba(13, 44, 76, .07) !important; }
+.people-grid .card-img-top { height: auto; aspect-ratio: 5 / 4; border-radius: 8px; }
+.people-grid .card-body { display: flex; flex-direction: column; align-items: flex-start; padding: 16px 0 0; }
+.people-grid .card-text { color: #385376; }
+.people-grid .btn { margin-top: auto; }
+@media (max-width: 1000px) { .people-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
+@media (max-width: 420px) { .people-grid { grid-template-columns: 1fr; } }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function User({ user }) {
   return (
-    <div  className="col-sm-4">
+    <div className="people-grid-item">
       <div className="card shadow-sm card-box">
         <img src={user.profile_picture} className="card-img-top" alt={user.username} />
         <div className="card-body">
