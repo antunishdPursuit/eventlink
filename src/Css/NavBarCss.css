@@ -1,5 +1,5 @@
 .site-nav { min-height: 64px; padding: 12px max(24px, calc((100% - 1200px) / 2)); display: flex; align-items: center; justify-content: space-between; gap: 24px; background: #fff; }
-.site-brand { color: #071c40; font-size: 1.7rem; font-weight: 800; text-decoration: none; letter-spacing: -.04em; }
+.site-brand { display: inline-flex; align-items: center; min-height: 44px; width: fit-content; flex-shrink: 0; white-space: nowrap; color: #071c40; font-family: var(--eventlink-font); font-size: var(--eventlink-brand-size); line-height: 1.2; font-weight: 800; text-decoration: none; letter-spacing: -.04em; }
 .site-brand span { color: #0876db; }
 .nav-right { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 24px; list-style: none; padding: 0; margin: 0; }
 .nav-right a { color: #071c40; text-decoration: none; font-weight: 600; }
