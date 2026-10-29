@@ -14,7 +14,7 @@ $env:VITE_API_URL = 'http://127.0.0.1:3003'
 npm start
 ```
 
-Open `http://127.0.0.1:3225/`. The `localhost` address redirects there so sign-in and session cookies use the same local site as the API. Create a profile with a password to save events and edit that profile. The existing sample profiles remain available to browse.
+Open `http://127.0.0.1:3225/`. The `localhost` address redirects there so sign-in and session cookies use the same local site as the API. Browse Events without an account. To save events, choose Sign in; new users can select Create account there and are signed in automatically. My profile holds your profile information and saved events. The existing sample profiles remain available to browse under People.
 
 The Ticketmaster API key belongs in the backend environment, not the frontend or the repository.
 
