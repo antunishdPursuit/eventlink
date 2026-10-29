@@ -6,16 +6,24 @@ const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
 
 function Users() {
     const [users, setUsers] = useState([]);
+    const [status, setStatus] = useState('loading');
+    const [attempt, setAttempt] = useState(0);
     const [selectedOption, setSelectedOption] = useState('date');
     const [sortDirection, setSortDirection] = useState('asc'); // Default to ascending
     
     // Gathering the data from the backend
     useEffect(() => {
+        let active = true;
+        setStatus('loading');
         axios
           .get(`${API}/users`)
-          .then((response) => setUsers(response.data))
-          .catch((error) => console.warn("Error:", error));
-    }, []);
+          .then((response) => {
+              if (!Array.isArray(response.data)) throw new Error('Invalid response');
+              if (active) { setUsers(response.data); setStatus('ready'); }
+          })
+          .catch(() => { if (active) setStatus('error'); });
+        return () => { active = false; };
+    }, [attempt]);
     
     //Sort
     function onSort(value, direction) {
@@ -93,11 +101,14 @@ function Users() {
             </div>
         </div>
         {/* Displaying Users */}
-        <div className="people-grid">
+        {status === 'loading' && <p role="status">Loading people...</p>}
+        {status === 'error' && <div role="alert"><p>Unable to load people.</p><button type="button" className="btn btn-primary" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>}
+        {status === 'ready' && users.length === 0 && <p>No profiles yet.</p>}
+        {status === 'ready' && <div className="people-grid">
                 {users.map((user) => {
                     return <User key={user.id} user={user} />;
                 })}
-        </div>
+        </div>}
     </div>
   );
 }

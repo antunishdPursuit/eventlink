@@ -1,8 +1,12 @@
+import { Link } from 'react-router-dom';
+
 function Error() {
     return (
-        <div>
-            <h2>Sorry the page is not found</h2>
-        </div>
+        <section className="container not-found-page">
+            <h1>Page not found</h1>
+            <p>We couldn't find that page.</p>
+            <Link to="/" className="btn btn-primary">Back to home</Link>
+        </section>
     );
 }
 
