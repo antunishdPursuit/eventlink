@@ -41,9 +41,9 @@ export default function EventForm({ eventDetails, toggleView, handleSubmit }) {
       ))}
       {draft.artist_picture && <img src={draft.artist_picture} alt="Event preview" className="event-edit-preview" onError={(event) => { event.currentTarget.hidden = true; }} onLoad={(event) => { event.currentTarget.hidden = false; }} />}
       {error && <p role="alert">{error}</p>}
-      <div className="event-edit-actions">
-        <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Saving...' : 'Save changes'}</button>
+      <div className="event-edit-actions profile-form-actions">
         <button type="button" className="btn btn-secondary" onClick={toggleView} disabled={saving}>Cancel</button>
+        <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Saving...' : 'Save changes'}</button>
       </div>
     </form>
   );
