@@ -47,6 +47,7 @@ function UserSearch({user, handleAddEvents, removedEvent}) {
 
     return (
         <div className="eventlink-discovery">
+            <h2>Find events</h2>
             <form className="d-flex">
                 <div className="input-group me-2">
                     <input 

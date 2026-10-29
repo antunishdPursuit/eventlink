@@ -50,8 +50,10 @@ function UserDetails() {
   return (
     <div className="eventlink-profile-layout">
       <div className="flex-grow-1">
-        <div className="card mb-3">
-          <UserCard user={user} id={id} handleDelete={handleDelete} />
+        <div className="card profile-card mb-3">
+          {user.id ? <UserCard user={user} id={id} handleDelete={handleDelete} /> : <p className="profile-loading" role="status">Loading profile...</p>}
+        </div>
+        <div className="card saved-events-card">
           <Events newEventToAdd={newEventToAdd} onEventDeleted={setRemovedEvent} />
         </div>
       </div>
