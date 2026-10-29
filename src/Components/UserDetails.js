@@ -10,6 +10,7 @@ const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
 function UserDetails() {
     const [user, setUser] = useState([]);
     const [profileError, setProfileError] = useState(false);
+    const [profileMissing, setProfileMissing] = useState(false);
     const [profileAttempt, setProfileAttempt] = useState(0);
     const [newEventToAdd, setNewEventToAdd] = useState({})
     const [removedEvent, setRemovedEvent] = useState(null);
@@ -22,6 +23,7 @@ function UserDetails() {
       let active = true;
       setUser([]);
       setProfileError(false);
+      setProfileMissing(false);
       axios
         .get(`${API}/users/${id}`)
         .then((response) => {
@@ -29,8 +31,11 @@ function UserDetails() {
           if (response.data?.id) setUser(response.data);
           else setProfileError(true);
         })
-        .catch(() => {
-          if (active) setProfileError(true);
+        .catch(error => {
+          if (active) {
+            if (error.response?.status === 404) setProfileMissing(true);
+            else setProfileError(true);
+          }
         });
       return () => { active = false; };
     }, [id, profileAttempt]);
@@ -45,16 +50,17 @@ function UserDetails() {
       <div className="profile-column">
         <Link to="/users" className="profile-back">Back to people</Link>
         <div className="card profile-card mb-3">
-          {user.id ? <UserCard user={user} id={id} savedCount={savedCount.id === id ? savedCount.value : null} /> : profileError ?
+          {user.id ? <UserCard user={user} id={id} savedCount={savedCount.id === id ? savedCount.value : null} /> : profileMissing ?
+            <div className="profile-loading"><h1>Profile not found</h1><p>This profile is no longer available.</p></div> : profileError ?
             <div className="profile-loading" role="alert"><p>Unable to load profile.</p><button className="btn btn-primary" type="button" onClick={() => setProfileAttempt(value => value + 1)}>Try again</button></div> :
             <p className="profile-loading" role="status">Loading profile...</p>}
         </div>
-        <div className="card saved-events-card">
+        {user.id && <div className="card saved-events-card">
           <Events newEventToAdd={newEventToAdd} onEventDeleted={setRemovedEvent} onCountChange={updateSavedCount} />
-        </div>
+        </div>}
       </div>
       <div className="d-flex flex-column justify-content-between">
-        <EventSearch user={user} handleAddEvents={handleAddEvents} removedEvent={removedEvent} />
+        {user.id && <EventSearch user={user} handleAddEvents={handleAddEvents} removedEvent={removedEvent} />}
       </div>
     </div>
   );
