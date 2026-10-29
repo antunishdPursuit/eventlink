@@ -14,7 +14,7 @@ $env:VITE_API_URL = 'http://127.0.0.1:3003'
 npm start
 ```
 
-Open `http://127.0.0.1:3225/eventlink/`. Create a profile with a password to save events and edit that profile. The existing sample profiles remain available to browse.
+Open `http://127.0.0.1:3225/`. Create a profile with a password to save events and edit that profile. The existing sample profiles remain available to browse.
 
 The Ticketmaster API key belongs in the backend environment, not the frontend or the repository.
 
