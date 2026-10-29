@@ -3,27 +3,29 @@ import { beforeEach, expect, test, vi } from 'vitest';
 import axios from 'axios';
 import { AuthProvider, useAuth } from './AuthContext';
 
-vi.mock('axios', () => ({ default: { defaults: {}, get: vi.fn(), post: vi.fn() } }));
+vi.mock('axios', () => ({ default: { defaults: {}, get: vi.fn(), post: vi.fn(), delete: vi.fn() } }));
 beforeEach(() => vi.clearAllMocks());
 
 function AccountControls() {
-  const { userId, signIn, signOut, register, authPending, setUserId } = useAuth();
+  const { userId, signIn, signOut, register, deleteProfile, authPending, setUserId } = useAuth();
   return <><output aria-label="Current user">{userId ?? 'none'}</output>
     <button onClick={() => signIn('test-person', 'test-password-123')}>Sign in</button>
     <button disabled={authPending} onClick={() => register({ username: 'test-person' }, 'test-password-123')}>Register</button>
     <button onClick={signOut}>Sign out</button>
+    <button onClick={() => deleteProfile(7)}>Delete profile</button>
     <button onClick={() => setUserId(null)}>Clear identity</button></>;
 }
 
-test.each(['Sign in', 'Register', 'Sign out'])('a late initial session response cannot override %s', async action => {
+test.each(['Sign in', 'Register', 'Sign out', 'Delete profile'])('a late initial session response cannot override %s', async action => {
   let finishSession;
   axios.get.mockImplementation(() => new Promise(resolve => { finishSession = resolve; }));
   axios.post.mockImplementation(url => Promise.resolve({ data: { userId: url.endsWith('register') ? 8 : 7 } }));
+  axios.delete.mockResolvedValue({ data: { id: 7 } });
   render(<AuthProvider><AccountControls /></AuthProvider>);
   await act(async () => fireEvent.click(screen.getByRole('button', { name: action })));
   const expected = action === 'Sign in' ? '7' : action === 'Register' ? '8' : 'none';
   await waitFor(() => expect(screen.getByLabelText('Current user')).toHaveTextContent(expected));
-  await act(async () => finishSession({ data: { userId: action === 'Sign out' ? 7 : null } }));
+  await act(async () => finishSession({ data: { userId: ['Sign out', 'Delete profile'].includes(action) ? 7 : null } }));
   expect(screen.getByLabelText('Current user')).toHaveTextContent(expected);
 });
 
@@ -37,7 +39,9 @@ test('overlapping account mutations are rejected before a second request is sent
   let first;
   act(() => { first = account.register({ username: 'test-person' }, 'test-password-123'); });
   await expect(account.signIn('another-person', 'test-password-456')).rejects.toThrow('already in progress');
+  await expect(account.deleteProfile(8)).rejects.toThrow('already in progress');
   expect(axios.post).toHaveBeenCalledTimes(1);
+  expect(axios.delete).not.toHaveBeenCalled();
   await act(async () => { finishFirst({ data: { userId: 8 } }); await first; });
   expect(account.userId).toBe(8);
 });

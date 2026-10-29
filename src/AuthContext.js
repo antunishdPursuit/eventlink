@@ -30,9 +30,9 @@ export function AuthProvider({ children }) {
     const revision = ++authRevision.current;
     setSessionLoading(false);
     try {
-      const { data } = await axios.post(`${API}/auth/${action}`, payload);
+      const { data } = action === 'delete-profile' ? await axios.delete(`${API}/users/${payload}`) : await axios.post(`${API}/auth/${action}`, payload);
       if (revision !== authRevision.current) return { applied: false };
-      const nextUserId = action === 'logout' ? null : data.userId;
+      const nextUserId = ['logout', 'delete-profile'].includes(action) ? null : data.userId;
       setSessionUserId(nextUserId);
       return { applied: true, userId: nextUserId };
     } finally {
@@ -43,7 +43,8 @@ export function AuthProvider({ children }) {
   const signIn = useCallback((username, password) => changeAccount('login', { username, password }), [changeAccount]);
   const register = useCallback((profile, password) => changeAccount('register', { ...profile, password }), [changeAccount]);
   const signOut = useCallback(() => changeAccount('logout'), [changeAccount]);
-  return <AuthContext.Provider value={{ userId, setUserId, signIn, signOut, register, sessionLoading, authPending }}>{children}</AuthContext.Provider>;
+  const deleteProfile = useCallback(id => changeAccount('delete-profile', id), [changeAccount]);
+  return <AuthContext.Provider value={{ userId, setUserId, signIn, signOut, register, deleteProfile, sessionLoading, authPending }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

@@ -14,6 +14,7 @@ export default function EventForm({ eventDetails, toggleView, handleSubmit }) {
   ];
   const submit = async (event) => {
     event.preventDefault();
+    if (saving) return;
     setSaving(true);
     setError('');
     try {
@@ -26,7 +27,7 @@ export default function EventForm({ eventDetails, toggleView, handleSubmit }) {
     }
   };
   return (
-    <form className="event-edit-form" onSubmit={submit}>
+    <form className="event-edit-form" onSubmit={submit} aria-busy={saving}>
       <h3>Edit event</h3>
       {fields.map(([key, label, type]) => (
         <div className="event-edit-field" key={key}>
@@ -34,6 +35,7 @@ export default function EventForm({ eventDetails, toggleView, handleSubmit }) {
           <input id={`${formId}-${key}`} className="form-control" type={type}
             min={type === 'number' ? '0' : undefined} step={type === 'number' ? '.01' : undefined}
             value={draft[key] ?? ''} onChange={(event) => setDraft({ ...draft, [key]: event.target.value })}
+            disabled={saving}
             required={key === 'artist' || key === 'city' || key === 'venue'} />
         </div>
       ))}
