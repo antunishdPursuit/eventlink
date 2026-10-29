@@ -74,7 +74,7 @@ function UsersNewForm() {
   return (
     <div className="row justify-content-md-center">
       <div className="col-md-auto">
-        <h1 className="interior-title">Create profile</h1>
+        <h1>Create profile</h1>
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="form-floating col-6">
@@ -154,7 +154,7 @@ function UsersNewForm() {
                 <label htmlFor="date_created">Date Created:</label>
               </div>
                 <br></br>
-              <input type="submit" className="btn btn-primary" />
+              <input type="submit" />
             </div>
           </div>
         </form>
