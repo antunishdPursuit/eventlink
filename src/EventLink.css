@@ -111,3 +111,20 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
   .eventlink-discovery .card-body .row { gap: 12px; }
   .eventlink-discovery .event-search-box { width: min(100%, 220px); }
 }
+
+/* About: preserve the original story in a readable editorial layout. */
+.about-page .centering { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 24px; }
+.about-page .centering > h2 { grid-column: 1 / -1; max-width: 18ch; margin: 0; color: var(--eventlink-ink); font-size: clamp(2rem, 4vw, 3rem); font-weight: 750; letter-spacing: -.035em; }
+.about-page .centering > .paragraph-box { grid-column: 1 / -1; max-width: 75ch; color: #385376; font-size: 1.1rem; }
+.about-page .event-box { grid-column: 1 / -1; max-width: none; height: auto; justify-content: flex-start; padding: 24px; border-radius: var(--eventlink-radius); background: #fff; border: 1px solid var(--eventlink-border); }
+.about-page .event-image { width: min(45%, 460px); border-radius: 8px; }
+.about-page .about-section { min-width: 0; padding: 24px; background: #fff; border: 1px solid var(--eventlink-border); border-radius: var(--eventlink-radius); }
+.about-page h3 { color: var(--eventlink-ink); font-size: 1.35rem; font-weight: 700; }
+.about-page p, .about-page li { overflow-wrap: anywhere; line-height: 1.6; }
+.about-page .paragraph-box { width: auto; }
+@media (max-width: 700px) {
+  .about-page .centering { grid-template-columns: 1fr; gap: 16px; }
+  .about-page .event-box { align-items: flex-start; padding: 20px; }
+  .about-page .event-image { width: 100%; max-width: 100%; }
+  .about-page .about-section { padding: 20px; }
+}
