@@ -13,8 +13,9 @@ export default function SignIn() {
     try { await signIn(username, password); navigate('/users'); }
     catch (_) { setError('Unable to sign in. Check your details and try again.'); }
   }
-  return <section className="container"><h1>Sign in</h1>
+  return <section className="container account-page">
     <form className="auth-form" onSubmit={submit}>
+      <h1>Sign in</h1>
       <label htmlFor="login-name">Username</label>
       <input className="form-control" id="login-name" autoComplete="username" value={username} onChange={event => setUsername(event.target.value)} required />
       <label htmlFor="login-password">Password</label>

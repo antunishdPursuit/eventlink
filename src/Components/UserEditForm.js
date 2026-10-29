@@ -99,7 +99,7 @@ function UsersNewForm() {
               />
               <label htmlFor="profile_picture">Profile Picture:</label>
             <div className="container mt-5" id="imagePreviewParent">
-              <h4>ImagePreview</h4>
+              <h4>Image preview</h4>
               <div className="image-preview" id="imagePreview">
                   {selectedImage && <img onError={addDefaultSrc} src={selectedImage} alt="Preview" className="img-fluid" />}
               </div>

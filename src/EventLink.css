@@ -44,3 +44,27 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
   .site-main .event-box { flex-direction: column; }
   .site-main .event-image { max-width: 100%; }
 }
+
+/* Account pages */
+.site-main > .account-page { margin: 0 auto; padding: clamp(40px, 6vw, 80px) 24px; }
+.account-page .auth-form, .profile-form-page > .row > .col-md-auto {
+  background: #fff; border: 1px solid var(--eventlink-border); border-radius: 24px;
+  box-shadow: 0 8px 28px rgba(13, 44, 76, .08); padding: clamp(24px, 4vw, 48px);
+}
+.account-page .auth-form { width: 100%; max-width: 520px; margin: 0 auto; gap: 12px; }
+.account-page h1 { color: var(--eventlink-ink); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 750; letter-spacing: -.035em; text-align: center; margin: 0 0 24px; }
+.account-page label { color: var(--eventlink-ink); font-weight: 600; }
+.account-page .auth-form button { margin-top: 12px; }
+.profile-form-page > .row { margin: 0; }
+.profile-form-page > .row > .col-md-auto { width: min(100%, 760px); }
+.profile-form-page form > .row { gap: 24px 0; }
+.profile-form-page form > .row > .col-auto { flex: 1 1 300px; min-width: 0; }
+.profile-form-page #imagePreviewParent { margin-top: 24px !important; padding: 0; }
+.profile-form-page #imagePreviewParent h4 { font-size: 1rem; font-weight: 700; color: var(--eventlink-ink); }
+.profile-form-page .image-preview img { max-height: 220px; border-radius: var(--eventlink-radius); object-fit: cover; }
+.profile-form-page input[type='submit'] { min-height: 44px; min-width: 144px; }
+@media (max-width: 700px) {
+  .site-main > .account-page { padding: 32px 16px; }
+  .profile-form-page form > .row > .col-6, .profile-form-page form > .row > .col-auto { width: 100%; flex: 0 0 100%; }
+  .profile-form-page > .row > .col-md-auto { padding: 24px 20px; }
+}

@@ -2,7 +2,7 @@ import UserEditForm from "../Components/UserEditForm";
 
 function Edit() {
     return (
-        <div>
+        <div className="container account-page profile-form-page">
             {/* <h2>Edit Page</h2> */}
             <UserEditForm />
         </div>
