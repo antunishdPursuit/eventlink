@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import '../../Css/NavBarCss.css';
 import { useAuth } from '../../AuthContext';
 
@@ -7,10 +7,10 @@ export default function NavBar() {
   return <nav className="site-nav" aria-label="Main navigation">
     <Link className="site-brand" to="/">Event<span>Link</span></Link>
     <ul className="nav-right">
-      <li><Link to="/users">People</Link></li>
-      <li><Link to="/users/new">Create profile</Link></li>
-      <li><Link to="/about">About</Link></li>
-      <li>{userId ? <button className="nav-signout" onClick={() => signOut().catch(() => {})}>Sign out</button> : <Link to="/signin">Sign in</Link>}</li>
+      <li><NavLink to="/users" end>People</NavLink></li>
+      <li><NavLink to="/users/new">Create profile</NavLink></li>
+      <li><NavLink to="/about">About</NavLink></li>
+      <li>{userId ? <button className="nav-signout" onClick={() => signOut().catch(() => {})}>Sign out</button> : <NavLink to="/signin">Sign in</NavLink>}</li>
     </ul>
   </nav>;
 }

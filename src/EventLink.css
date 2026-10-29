@@ -5,19 +5,28 @@
   --eventlink-border: #ccdfef;
   --eventlink-radius: 12px;
   --eventlink-space: 24px;
+  --eventlink-concept-width: 1392px;
+  --eventlink-accent: #007ac2;
 }
 
 body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
 .App { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
 .site-main { flex: 1; min-height: 0; }
+.interior-shell { background: #e7f5fe; }
+.interior-shell .site-nav { min-height: 80px; padding: 12px max(24px, calc((100% - 1344px) / 2)); }
+.interior-shell .site-brand { font-size: 40px; }
+.interior-shell .nav-right { gap: 32px; }
+.interior-shell .nav-right a, .interior-shell .nav-signout { font-size: 18px; }
+.interior-shell .nav-right a[aria-current='page'] { text-decoration: underline; text-underline-offset: 12px; text-decoration-color: var(--eventlink-accent); text-decoration-thickness: 2px; }
 .site-main > .Users, .site-main > .container, .site-main > article,
 .eventlink-profile-layout { max-width: 1200px; margin: 32px auto; padding: 0 var(--eventlink-space); }
 .site-main .card { border: 1px solid var(--eventlink-border); border-radius: var(--eventlink-radius); background: #fff; overflow: hidden; }
 .site-main .card-body { padding: 20px; }
 .site-main .card-box { width: 100%; margin-bottom: 20px; }
 .site-main .card-img-top { width: 100%; height: 220px; object-fit: cover; object-position: center top; }
-.people-heading { margin: 0 0 24px; color: var(--eventlink-ink); font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; }
-.site-main .people-card-name { color: var(--eventlink-ink); font-size: 1.2rem; font-weight: 700; overflow-wrap: anywhere; }
+.site-main > .Users { max-width: var(--eventlink-concept-width); margin-top: 48px; margin-bottom: 64px; }
+.people-heading { margin: 0 0 24px; color: var(--eventlink-ink); font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; font-weight: 750; }
+.site-main .people-card-name { color: var(--eventlink-ink); font-size: 22px; font-weight: 700; overflow-wrap: anywhere; }
 .site-main .sort-box-2 { background: var(--eventlink-surface); }
 .site-main .sort-box-2 .form-check { margin-top: 8px; }
 .site-main .btn { min-height: 44px; border-radius: 8px; font-weight: 600; }
@@ -76,12 +85,14 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
 .people-directory .sort-box-2 .card-body { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 0; }
 .people-directory .sort-box-2 .card-title { margin: 0; font-size: 1rem; font-weight: 700; }
 .people-directory .sort-box-2 .form-check { margin: 0; }
-.people-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.people-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 32px; }
 .people-grid-item { min-width: 0; }
-.people-grid .card-box { height: 100%; margin: 0; padding: 16px; box-shadow: 0 4px 16px rgba(13, 44, 76, .07) !important; }
+.people-grid .card-box { height: 100%; margin: 0; padding: 20px; box-shadow: 0 4px 16px rgba(13, 44, 76, .04) !important; }
 .people-grid .card-img-top { height: auto; aspect-ratio: 5 / 4; border-radius: 8px; }
 .people-grid .card-body { display: flex; flex-direction: column; align-items: flex-start; padding: 16px 0 0; }
-.people-grid .card-text { color: #385376; }
+.people-grid .card-title { margin: 0 0 12px; }
+.people-grid .card-text { color: #506b8c; font-size: 18px; margin: 0 0 8px; white-space: normal; }
+.people-grid .group-yes { color: var(--eventlink-accent); font-weight: 600; }
 .people-grid .btn { margin-top: auto; }
 @media (max-width: 1000px) { .people-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 700px) { .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
@@ -144,10 +155,13 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
 @media (max-width: 700px) { .event-edit-form { padding: 20px; } .event-edit-actions > button { flex: 1 1 120px; } }
 
 /* Align interior pages with the approved content-first concepts. */
-.people-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+.people-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 64px; margin-bottom: 24px; }
+.people-sort { display: flex; align-items: center; gap: 20px; color: #506b8c; }
+.people-sort label { white-space: nowrap; }
+.people-sort select { width: 220px; min-height: 52px; color: var(--eventlink-ink); border-color: var(--eventlink-border); border-radius: 10px; }
 .people-toolbar .people-heading, .people-toolbar .sort-box { margin: 0; }
 .people-toolbar .sort-box { width: auto; }
-.people-card-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--eventlink-link); font-weight: 600; text-decoration: none; }
+.people-card-link { display: inline-flex; align-items: center; min-height: 40px; color: var(--eventlink-accent); font-size: 18px; font-weight: 400; text-decoration: none; }
 .people-card-link:hover { text-decoration: underline; }
 @media (max-width: 700px) { .people-toolbar { align-items: flex-start; flex-direction: column; gap: 16px; } }
 .profile-form-page form > .row > .col-6, .profile-form-page form > .row > .col-auto { width: 100%; flex: 0 0 100%; }
@@ -195,3 +209,14 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
 .eventlink-discovery .card-body .card-subtitle, .eventlink-discovery .card-body h5 { font-size: .9rem !important; }
 @media (max-width: 900px) { .eventlink-discovery .card-body > .row { grid-template-columns: 100px minmax(0, 1fr); } .eventlink-discovery .card-body > .row > div:last-child { grid-column: 2; } }
 @media (max-width: 420px) { .eventlink-discovery .card-body > .row { grid-template-columns: 1fr; } .eventlink-discovery .card-body > .row > div:last-child { grid-column: 1; } }
+
+@media (max-width: 700px) {
+  .interior-shell .site-nav { padding: 12px 20px; }
+  .interior-shell .site-brand { font-size: 28px; }
+  .interior-shell .nav-right { gap: 16px; }
+  .interior-shell .nav-right a, .interior-shell .nav-signout { font-size: 16px; }
+  .site-main > .Users { margin-top: 32px; }
+  .people-sort { gap: 12px; }
+  .people-sort select { max-width: calc(100vw - 104px); }
+  .site-main .people-card-name { font-size: 20px; }
+}

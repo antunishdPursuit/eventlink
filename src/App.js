@@ -1,5 +1,5 @@
 // DEPENDENCIES
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 // PAGES
 import Edit from "./Pages/Edit";
@@ -15,8 +15,9 @@ import NavBar from "./Components/Organization/NavBar";
 import About from "./Components/Organization/About"
 import Footer from "./Components/Organization/Footer";
 function App() {
+  const { pathname } = useLocation();
   return (
-    <div className="App">
+    <div className={`App${pathname === '/' ? '' : ' interior-shell'}`}>
         <NavBar />
         <main className="site-main">
           <Routes>

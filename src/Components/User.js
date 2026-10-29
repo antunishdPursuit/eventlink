@@ -8,7 +8,7 @@ function User({ user }) {
         <img src={user.profile_picture} className="card-img-top" alt={user.username} />
         <div className="card-body">
             <h2 className="card-title people-card-name">{user.username}</h2>
-            <p className="card-text">Looking for Group? <br></br> {user.looking_for_group ? "Yes" : "No"}</p>
+            <p className="card-text">Looking for group: <span className={user.looking_for_group ? 'group-yes' : ''}>{user.looking_for_group ? "Yes" : "No"}</span></p>
             <Link to={`/users/${user.id}`} className="people-card-link">Learn More</Link>
         </div>
       </div>
