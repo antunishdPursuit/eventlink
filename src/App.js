@@ -6,6 +6,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Edit from "./Pages/Edit";
 import Error from "./Pages/ErrorPage";
 import Home from "./Pages/Home";
+import DiscoverEvents from "./Pages/DiscoverEvents";
 import SignIn from "./Pages/SignIn";
 import Index from "./Pages/Index";
 import New from "./Pages/New";
@@ -26,6 +27,7 @@ function App() {
         <main className="site-main">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/events" element={<DiscoverEvents />} />
             <Route path="/users" element={<Index />} />
             <Route path="/users/new" element={<New />} />
             <Route path="/signin" element={<SignIn />} />

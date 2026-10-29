@@ -15,7 +15,7 @@ const stateChoices = [
   ['VA', 'Virginia'], ['WA', 'Washington'], ['WV', 'West Virginia'], ['WI', 'Wisconsin'], ['WY', 'Wyoming'],
 ];
 
-export default function EventSearch({ user, handleAddEvents, removedEvent }) {
+export default function EventSearch({ user, handleAddEvents, removedEvent, title = 'Find Events' }) {
   const [query, setQuery] = useState('stateCode=NY');
   const [state, setState] = useState('NY');
   const [zip, setZip] = useState('');
@@ -46,7 +46,7 @@ export default function EventSearch({ user, handleAddEvents, removedEvent }) {
     else setQuery(next);
   }
   return <section className="eventlink-discovery" aria-labelledby="discovery-title">
-    <h2 id="discovery-title">Find Events</h2>
+    <h1 id="discovery-title">{title}</h1>
     <form className="discovery-search" onSubmit={search}>
       <div><label htmlFor="event-state">State</label><input id="event-state" className="form-control form-select" type="search" list="event-states" value={state} placeholder="State code" aria-label="Search by State" onChange={event => { setState(event.target.value); setZip(''); }} /><datalist id="event-states">{stateChoices.map(([code, name]) => <option key={code} value={code} label={name + ' (' + code + ')'} />)}</datalist></div>
       <div><label htmlFor="event-zip">ZIP code</label><input id="event-zip" className="form-control" type="search" inputMode="numeric" value={zip} placeholder="ZIP code" aria-label="Search by Zipcode" onChange={event => { setZip(event.target.value); setState(''); }} /></div>

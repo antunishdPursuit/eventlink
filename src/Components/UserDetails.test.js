@@ -25,5 +25,6 @@ test('a temporary profile failure can still be retried', async () => {
   expect(await screen.findByRole('alert')).toHaveTextContent('Unable to load profile.');
   fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
   expect(await screen.findByRole('heading', { name: 'Loaded profile' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'Find Events' })).toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: 'Find Events' })).not.toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Saved events' })).toBeInTheDocument();
 });

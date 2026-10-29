@@ -53,7 +53,7 @@ function Events({newEventToAdd, onEventDeleted, onCountChange}) {
       .then((response) => {
           if (mutationScope.current !== scope) return;
           requestVersion.current += 1;
-          onEventDeleted(response.data);
+          onEventDeleted?.(response.data);
           setEvents((prevEvents) =>
           prevEvents.filter((event) => event.id !== eventId)
         );

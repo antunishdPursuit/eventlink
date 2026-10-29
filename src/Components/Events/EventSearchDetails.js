@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../AuthContext';
+import { Link, useLocation } from 'react-router-dom';
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3003';
 
-export default function EventSearchDetails({ event, user, handleAddEvents, removedEvent }) {
+export default function EventSearchDetails({ event, user = {}, handleAddEvents, removedEvent }) {
+  const location = useLocation();
   const { userId, authPending } = useAuth();
   const canAdd = userId != null && String(userId) === String(user.id);
   const venue = event._embedded?.venues?.[0];
@@ -45,7 +47,7 @@ export default function EventSearchDetails({ event, user, handleAddEvents, remov
       const { data } = await axios.post(API + '/users/' + user.id + '/events', saved);
       if (scope.current !== requestScope) return;
       setSavedId(data.id);
-      handleAddEvents(data);
+      handleAddEvents?.(data);
     } catch (_) {
       if (scope.current === requestScope) setAddError(true);
     } finally {
@@ -53,7 +55,9 @@ export default function EventSearchDetails({ event, user, handleAddEvents, remov
     }
   }
 
-  return <article className="discovery-event">
+  const eventAnchor = 'event-' + event.id;
+  const returnTo = '/events' + location.search + '#' + encodeURIComponent(eventAnchor);
+  return <article className="discovery-event" id={eventAnchor} tabIndex={-1}>
     <div className="discovery-event-art">{image && <img key={image} src={image} alt="" className="discovery-event-image" onError={event => { event.currentTarget.hidden = true; }} />}</div>
     <div className="discovery-event-details">
       <h4>{event.name}</h4>
@@ -70,6 +74,7 @@ export default function EventSearchDetails({ event, user, handleAddEvents, remov
     <div className="discovery-event-actions">
       {event.url && <a href={event.url} target="_blank" rel="noreferrer" className="event-ticket-link">Get Tickets <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" aria-hidden="true"><path d="M6 3H2v11h11v-4M9 2h5v5M14 2 7 9" /></svg></a>}
       {canAdd && (savedId != null ? <p className="event-added" role="status">Saved</p> : <button type="button" className="event-save" onClick={add} disabled={adding || authPending}>{adding ? 'Saving...' : 'Add to Saved'}</button>)}
+      {userId == null && <Link className="event-save" to={'/signin?returnTo=' + encodeURIComponent(returnTo)}>Sign in to save</Link>}
     </div>
     {addError && <p className="event-action-error" role="alert">Unable to save this event. Please try again.</p>}
   </article>;

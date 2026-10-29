@@ -2,7 +2,6 @@ import "../Css/UserDetailsCss.css"
 import axios from "axios";
 import UserCard from "./UserCard";
 import Events from "./Events/Events";
-import EventSearch from "./Events/EventSearch"
 import { useState, useEffect, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
@@ -12,8 +11,6 @@ function UserDetails() {
     const [profileError, setProfileError] = useState(false);
     const [profileMissing, setProfileMissing] = useState(false);
     const [profileAttempt, setProfileAttempt] = useState(0);
-    const [newEventToAdd, setNewEventToAdd] = useState({})
-    const [removedEvent, setRemovedEvent] = useState(null);
     const [savedCount, setSavedCount] = useState({ id: null, value: null });
     let { id } = useParams();
 
@@ -41,10 +38,6 @@ function UserDetails() {
     }, [id, profileAttempt]);
 
 
-  function handleAddEvents(event) {
-    setNewEventToAdd(event)
-}
-
   return (
     <div className="eventlink-profile-layout">
       <div className="profile-column">
@@ -56,11 +49,8 @@ function UserDetails() {
             <p className="profile-loading" role="status">Loading profile...</p>}
         </div>
         {user.id && <div className="card saved-events-card">
-          <Events newEventToAdd={newEventToAdd} onEventDeleted={setRemovedEvent} onCountChange={updateSavedCount} />
+          <Events onCountChange={updateSavedCount} />
         </div>}
-      </div>
-      <div className="d-flex flex-column justify-content-between">
-        {user.id && <EventSearch user={user} handleAddEvents={handleAddEvents} removedEvent={removedEvent} />}
       </div>
     </div>
   );

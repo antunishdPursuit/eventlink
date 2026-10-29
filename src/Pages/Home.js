@@ -37,7 +37,7 @@ export default function Home() {
         <div className="home_hero_content">
           <h1>Find your next <span>live experience</span></h1>
           <p>Discover events and keep track of the ones you love.</p>
-          <Link className="home_primary" to="/users">Explore events</Link>
+          <Link className="home_primary" to="/events">Explore events</Link>
         </div>
       </section>
       <section className="home_featured" aria-labelledby="featured-title">
@@ -51,12 +51,12 @@ export default function Home() {
           {events.map(event => {
             const venue = event._embedded?.venues?.[0];
             const image = event.images?.find(item => item.ratio === '16_9')?.url || event.images?.[0]?.url;
+            const content = <>{image && <img src={image} alt="" />}<div><h3>{event.name}</h3>
+              {venue && <p>{[venue.name, venue.city?.name].filter(Boolean).join(' · ')}</p>}
+              {event.dates?.start?.localDate && <p>{event.dates.start.localDate}</p>}
+            </div></>;
             return <article className="home_event_card" key={event.id}>
-              {image && <img src={image} alt="" />}
-              <div><h3>{event.name}</h3>
-                {venue && <p>{[venue.name, venue.city?.name].filter(Boolean).join(' · ')}</p>}
-                {event.dates?.start?.localDate && <p>{event.dates.start.localDate}</p>}
-              </div>
+              {/^https?:\/\//i.test(event.url || '') ? <a className="home_event_link" href={event.url} target="_blank" rel="noreferrer" aria-label={event.name + ' — tickets'}>{content}</a> : content}
             </article>;
           })}
         </div>

@@ -16,3 +16,11 @@ test('failed homepage events can be retried without reloading the page', async (
   expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   expect(attempts).toBe(2);
 });
+
+test('homepage event cards open the genuine ticket destination', async () => {
+  axios.get.mockImplementation(url => Promise.resolve({ data: url.endsWith('/users') ? [] : { events: [{ id: 'live', name: 'Live concert', url: 'https://www.ticketmaster.com/example' }] } }));
+  render(<MemoryRouter><Home /></MemoryRouter>);
+  const ticket = await screen.findByRole('link', { name: 'Live concert — tickets' });
+  expect(ticket).toHaveAttribute('href', 'https://www.ticketmaster.com/example');
+  expect(ticket).toHaveAttribute('rel', 'noreferrer');
+});
