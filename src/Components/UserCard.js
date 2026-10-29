@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { displayProfileDate } from '../profileFormUtils';
 
-export default function UserCard({ user, id, handleDelete, savedCount }) {
-  const { userId, authPending } = useAuth();
+export default function UserCard({ user, id, savedCount }) {
+  const { userId } = useAuth();
   const isOwner = String(userId) === String(id);
   return <div className="card-body">
     <div className="profile-controls">
@@ -22,6 +22,5 @@ export default function UserCard({ user, id, handleDelete, savedCount }) {
       <div><dt>Looking for group</dt><dd>{user.looking_for_group ? 'Yes' : 'No'}</dd></div>
       <div><dt>Joined</dt><dd className="profile-joined"><time dateTime={user.date_created?.slice(0, 10)}>{displayProfileDate(user.date_created)}</time></dd></div>
     </dl>
-    {isOwner && <div className="profile-owner-actions"><button className="profile-delete" type="button" onClick={handleDelete} disabled={authPending}>{authPending ? 'Please wait...' : 'Delete profile'}</button></div>}
   </div>;
 }

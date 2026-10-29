@@ -1,4 +1,5 @@
 import ProfileFields from './ProfileFields';
+import DeleteControl from './DeleteControl';
 import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -10,7 +11,8 @@ const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3003';
 export default function UserEditForm() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { userId, sessionLoading } = useAuth();
+  const { userId, sessionLoading, deleteProfile, authPending } = useAuth();
+  const [deleting, setDeleting] = useState(false);
   const isOwner = userId != null && String(userId) === String(id);
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState('loading');
@@ -53,7 +55,7 @@ export default function UserEditForm() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (submitting) return;
+    if (submitting || deleting) return;
     if (!isProfileImageUrl(user.profile_picture)) {
       setError('Use a link to a JPG, JPEG or PNG image.');
       return;
@@ -76,15 +78,21 @@ export default function UserEditForm() {
     {status === 'loading' && <p role="status">Loading your profile...</p>}
     {status === 'error' && <div role="alert"><p>Unable to load this profile.</p><button className="btn btn-primary" type="button" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>}
     {status === 'ready' && <form onSubmit={handleSubmit} aria-busy={submitting}>
-      <fieldset disabled={submitting}>
+      <fieldset disabled={submitting || deleting}>
         <ProfileFields user={user} onTextChange={handleTextChange}
           onGroupChange={() => setUser(current => ({ ...current, looking_for_group: !current.looking_for_group }))}
           selectedImage={selectedImage} previewError={previewError}
           onPreviewError={() => { setSelectedImage(''); setPreviewError(true); }} date={user.date_created?.slice(0, 10)} />
       </fieldset>
       {error && <p className="form-feedback" role="alert">{error}</p>}
-      <div className="profile-form-actions"><button type="button" className="btn btn-secondary" onClick={() => navigate('/users/' + id)} disabled={submitting}>Cancel</button><button type="submit" className="btn btn-primary profile-submit" disabled={submitting}>{submitting ? 'Saving...' : 'Save changes'}</button></div>
+      <div className="profile-form-actions"><button type="button" className="btn btn-secondary" onClick={() => navigate('/users/' + id)} disabled={submitting || deleting}>Cancel</button><button type="submit" className="btn btn-primary profile-submit" disabled={submitting || deleting}>{submitting ? 'Saving...' : 'Save changes'}</button></div>
     </form>}
+    {status === 'ready' && <details className="account-settings"><summary>Account settings</summary><h2>Delete profile</h2><p>Permanently remove your profile and all saved events. This cannot be undone.</p>
+      <DeleteControl label="Delete profile" description="Your profile and all saved events will be permanently deleted." disabled={submitting || authPending} onPendingChange={setDeleting} onDelete={async () => {
+        const result = await deleteProfile(id);
+        if (result.applied && activeProfile.current === id) navigate('/users');
+      }} />
+    </details>}
     </>}
   </div>;
 }

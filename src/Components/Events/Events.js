@@ -15,6 +15,7 @@ function Events({newEventToAdd, onEventDeleted, onCountChange}) {
   const loadedProfile = useRef(null);
   const requestVersion = useRef(0);
   const mutationScope = useRef(null);
+  const deleteRequests = useRef(new Map());
 
   useEffect(() => {
     mutationScope.current = {};
@@ -42,10 +43,13 @@ function Events({newEventToAdd, onEventDeleted, onCountChange}) {
   }, [id, status, events, onCountChange]);
 
   const handleDelete = (eventId) => {
+    const key = id + ':' + eventId;
+    if (deleteRequests.current.has(key)) return deleteRequests.current.get(key);
     const scope = mutationScope.current;
     setActionError('');
-    axios
+    const request = axios
       .delete(`${API}/users/${id}/events/${eventId}`)
+      .catch(error => { if (error.response?.status === 404) return { data: { id: eventId } }; throw error; })
       .then((response) => {
           if (mutationScope.current !== scope) return;
           requestVersion.current += 1;
@@ -55,7 +59,10 @@ function Events({newEventToAdd, onEventDeleted, onCountChange}) {
         );
           setAttempt(value => value + 1);
         })
-      .catch(() => { if (mutationScope.current === scope) setActionError('Unable to delete event. Please try again.'); });
+      .catch(error => { if (mutationScope.current === scope) { setActionError('Unable to delete event. Please try again.'); throw error; } })
+      .finally(() => deleteRequests.current.delete(key));
+    deleteRequests.current.set(key, request);
+    return request;
   };
 
   const handleEdit = async (updatedEvent) => {

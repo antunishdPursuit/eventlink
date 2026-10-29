@@ -324,3 +324,14 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
   .people-sort select { max-width: calc(100vw - 104px); }
   .site-main .people-card-name { font-size: 20px; }
 }
+
+.account-settings { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--eventlink-border); }
+.account-settings summary { cursor: pointer; min-height: 44px; color: var(--eventlink-muted); }
+.account-settings h2 { font-size: 20px; margin: 16px 0; }
+.delete-confirmation { flex-basis: 100%; width: 100%; padding: 16px; border: 1px solid #e3b8bf; border-radius: 8px; background: #fff; }
+.delete-confirmation h3 { font-size: 18px; margin-bottom: 8px; }
+.delete-confirmation p { font-size: 14px; overflow-wrap: anywhere; }
+.confirmation-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.confirmation-actions .btn { flex: 1 1 140px; min-height: 44px; }
+.saved-event-row .card-body:has(.delete-confirmation) { flex-wrap: wrap; }
+.saved-event-actions:has(.delete-confirmation) { flex-basis: 100%; }

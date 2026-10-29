@@ -1,8 +1,11 @@
 import "../../Css/EventCardCss.css"
 import { useAuth } from '../../AuthContext';
+import { useState } from 'react';
+import DeleteControl from '../DeleteControl';
 
 function User({ event, handleDelete, toggleView }) {
     const { userId } = useAuth();
+    const [deleting, setDeleting] = useState(false);
     const selectedImage = event.artist_picture;
 
   return (
@@ -24,8 +27,8 @@ function User({ event, handleDelete, toggleView }) {
                 <p className="card-text">{event.price == null ? 'Price unavailable' : `From $${Number(event.price).toFixed(2)}`}</p>
             </div>
             {String(userId) === String(event.user_id) && <div className="saved-event-actions">
-              <button className="btn btn-primary" onClick={toggleView}>Edit</button>
-              <button className="btn btn-danger" onClick={() => handleDelete(event.id)}>Delete</button>
+              <button className="btn btn-primary" disabled={deleting} onClick={toggleView}>Edit</button>
+              <DeleteControl label="Delete" description={'Permanently remove ' + event.artist + ' from your saved events?'} onPendingChange={setDeleting} onDelete={() => handleDelete(event.id)} />
             </div>}
         </div>
     </div>

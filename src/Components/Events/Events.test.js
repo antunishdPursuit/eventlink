@@ -5,7 +5,7 @@ import axios from 'axios';
 import Events from './Events';
 
 vi.mock('axios', () => ({ default: { get: vi.fn(), delete: vi.fn(), put: vi.fn() } }));
-vi.mock('./Event', () => ({ default: ({ event, handleDelete, handleSubmit }) => <div><input aria-label={`Draft ${event.artist}`} defaultValue="" /><button onClick={() => handleDelete(event.id)}>Delete {event.artist}</button><button onClick={() => handleSubmit({ ...event, artist: 'Edited' }).catch(() => {})}>Save {event.artist}</button></div> }));
+vi.mock('./Event', () => ({ default: ({ event, handleDelete, handleSubmit }) => <div><input aria-label={`Draft ${event.artist}`} defaultValue="" /><button onClick={() => handleDelete(event.id).catch(() => {})}>Delete {event.artist}</button><button onClick={() => handleSubmit({ ...event, artist: 'Edited' }).catch(() => {})}>Save {event.artist}</button></div> }));
 beforeEach(() => vi.resetAllMocks());
 
 function renderEvents(newEventToAdd, onCountChange) {
@@ -91,4 +91,18 @@ test('an edit that finishes after changing profiles cannot refresh the next prof
   await act(async () => finishEdit({ data: { id: 1, artist: 'Edited' } }));
   expect(screen.getByRole('button', { name: 'Delete Other' })).toBeInTheDocument();
   expect(axios.get).toHaveBeenCalledTimes(readsBefore);
+});
+
+test('repeated delete requests share one request and an already deleted event is removed', async () => {
+  axios.get.mockResolvedValueOnce({ data: [{ id: 1, artist: 'Example' }] }).mockResolvedValueOnce({ data: [] });
+  let rejectDelete;
+  axios.delete.mockImplementationOnce(() => new Promise((resolve, reject) => { rejectDelete = reject; }));
+  renderEvents();
+  const remove = await screen.findByRole('button', { name: 'Delete Example' });
+  fireEvent.click(remove);
+  fireEvent.click(remove);
+  expect(axios.delete).toHaveBeenCalledTimes(1);
+  await act(async () => rejectDelete({ response: { status: 404 } }));
+  expect(await screen.findByText('No saved events yet.')).toBeInTheDocument();
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });

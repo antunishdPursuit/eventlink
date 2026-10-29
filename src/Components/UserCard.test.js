@@ -15,6 +15,8 @@ test('real profile facts do not present an unavailable event count as zero', () 
   expect(screen.getByText('0')).toBeInTheDocument();
   expect(screen.getByText('Yes')).toBeInTheDocument();
   expect(screen.getByText('August 1, 2023')).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Edit profile' })).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Delete profile' })).not.toBeInTheDocument();
 });
 
 test('a visitor cannot see another profile owner controls', () => {
