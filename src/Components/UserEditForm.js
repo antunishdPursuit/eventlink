@@ -9,6 +9,7 @@ function UsersNewForm() {
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().split('T')[0]; // Format as yyyy-mm-dd
     const [selectedImage, setSelectedImage] = useState('');
+    const [previewError, setPreviewError] = useState(false);
     const [user, setUser] = useState({
         profile_picture: "",
         username: "",
@@ -44,13 +45,14 @@ function UsersNewForm() {
 
   const handleTextChange = (event) => {
     if(event.target.id === "profile_picture"){
+        setPreviewError(false);
         const test = event.target.value.split(".")
         const test1 = test[test.length - 1]
         if (test1 === "jpg" || test1 === "jpeg" || test1 === "png" ){
             // Figured out how to get to the image src but unable to create a deafult picture with there is an invalid src
             // let imageSrc = event.target.offsetParent.children[2].children[1].children[0].src
             setSelectedImage(event.target.value);
-        }
+        } else setSelectedImage('');
     }
     setUser({ ...user, [event.target.id]: event.target.value });
 
@@ -76,11 +78,6 @@ function UsersNewForm() {
     }
   };
 
-  // Displaying an image
-  function addDefaultSrc(ev){
-    ev.target.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/2048px-Red_X.svg.png'
-  }
-
   return (
     <div className="row justify-content-md-center">
       <div className="col-md-auto">
@@ -101,7 +98,8 @@ function UsersNewForm() {
             <div className="container mt-5" id="imagePreviewParent">
               <h4>Image preview</h4>
               <div className="image-preview" id="imagePreview">
-                  {selectedImage && <img onError={addDefaultSrc} src={selectedImage} alt="Preview" className="img-fluid" />}
+                  {selectedImage && <img onError={() => { setSelectedImage(''); setPreviewError(true); }} src={selectedImage} alt="Preview" className="img-fluid" />}
+                  {previewError && <p role="status">Unable to load image preview.</p>}
               </div>
             </div>
             </div>
