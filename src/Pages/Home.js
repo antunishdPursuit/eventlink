@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const API = process.env.REACT_APP_API_URL;
-const ticketmasterKey = process.env.REACT_APP_API_KEY;
 
 export default function Home() {
   const [users, setUsers] = useState([]);
@@ -17,12 +16,12 @@ export default function Home() {
     if (API) axios.get(`${API}/users`).then(({ data }) => {
       if (active && Array.isArray(data)) setUsers(data);
     }).catch(() => {});
-    if (!ticketmasterKey) setEventStatus('unavailable');
-    else axios.get('https://app.ticketmaster.com/discovery/v2/events.json', {
-      params: { apikey: ticketmasterKey, stateCode: 'NY', classificationName: 'music', size: 3 }
+    if (!API) setEventStatus('unavailable');
+    else axios.get(`${API}/api/events`, {
+      params: { stateCode: 'NY', classificationName: 'music', size: 3 }
     }).then(({ data }) => {
       if (!active) return;
-      const found = data._embedded?.events || [];
+      const found = data.events || [];
       setEvents(found);
       setEventStatus(found.length ? 'ready' : 'empty');
     }).catch(() => { if (active) setEventStatus('unavailable'); });

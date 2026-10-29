@@ -2,7 +2,7 @@ import "../../Css/EventCardCss.css"
 import axios from "axios";
 import EventSearchDetails from "../Events/EventSearchDetails";
 import { useEffect, useState } from "react";
-const API = process.env.REACT_APP_API_KEY;
+const API = process.env.REACT_APP_API_URL;
 
 function UserSearch({user, handleAddEvents}) {
     const [search, setSearch] = useState(`stateCode=NY`)
@@ -20,10 +20,9 @@ function UserSearch({user, handleAddEvents}) {
       try {
             // sort=name,desc&
             axios
-            .get(
-    `https://app.ticketmaster.com/discovery/v2/events.json?size=10&pages=1&apikey=${api}&${search}`)
+            .get(`${api}/api/events?size=10&${search}`)
             .then((response) => {
-                setEventsTicketmaster(response.data._embedded?.events || [])
+                setEventsTicketmaster(response.data.events || [])
                 setIsLoading(false);
                 setNoEvents(false)
 
