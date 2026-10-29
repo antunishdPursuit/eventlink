@@ -58,23 +58,25 @@ function Users() {
                         <input
                             className="form-check-input"
                             type="radio"
+                            id="sort-username"
                             name="sortOptions"
                             value="username"
                             checked={selectedOption === 'username'}
                             onChange={handleSortChange}
                         />
-                        <label className="form-check-label">Sort by username Created</label>
+                        <label className="form-check-label" htmlFor="sort-username">Username</label>
                     </div>
                     <div className="form-check">
                         <input
                             className="form-check-input"
                             type="radio"
+                            id="sort-group"
                             name="sortOptions"
                             value="group"
                             checked={selectedOption === 'group'}
                             onChange={handleSortChange}
                         />
-                        <label className="form-check-label">Looking for group?</label>
+                        <label className="form-check-label" htmlFor="sort-group">Looking for group?</label>
                     </div>
                     {/* Add more sort options if needed */}
                     <div className="form-check">
