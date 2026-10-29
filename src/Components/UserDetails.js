@@ -11,21 +11,29 @@ const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
 function UserDetails() {
     const { setUserId } = useAuth();
     const [user, setUser] = useState([]);
+    const [profileError, setProfileError] = useState(false);
+    const [profileAttempt, setProfileAttempt] = useState(0);
     const [newEventToAdd, setNewEventToAdd] = useState({})
     const [removedEvent, setRemovedEvent] = useState(null);
     let navigate = useNavigate();
     let { id } = useParams();
  
     useEffect(() => {
+      let active = true;
+      setUser([]);
+      setProfileError(false);
       axios
         .get(`${API}/users/${id}`)
         .then((response) => {
-          setUser(response.data);
+          if (!active) return;
+          if (response.data?.id) setUser(response.data);
+          else setProfileError(true);
         })
-        .catch((c) => {
-          console.warn("catch", c);
+        .catch(() => {
+          if (active) setProfileError(true);
         });
-    }, [id]);
+      return () => { active = false; };
+    }, [id, profileAttempt]);
 
   const handleDelete = () => {
     deleteUser();
@@ -51,7 +59,9 @@ function UserDetails() {
     <div className="eventlink-profile-layout">
       <div className="flex-grow-1">
         <div className="card profile-card mb-3">
-          {user.id ? <UserCard user={user} id={id} handleDelete={handleDelete} /> : <p className="profile-loading" role="status">Loading profile...</p>}
+          {user.id ? <UserCard user={user} id={id} handleDelete={handleDelete} /> : profileError ?
+            <div className="profile-loading" role="alert"><p>Unable to load profile.</p><button className="btn btn-primary" type="button" onClick={() => setProfileAttempt(value => value + 1)}>Try again</button></div> :
+            <p className="profile-loading" role="status">Loading profile...</p>}
         </div>
         <div className="card saved-events-card">
           <Events newEventToAdd={newEventToAdd} onEventDeleted={setRemovedEvent} />
