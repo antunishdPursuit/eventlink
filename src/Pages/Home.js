@@ -10,9 +10,11 @@ export default function Home() {
   const [userIndex, setUserIndex] = useState(0);
   const [events, setEvents] = useState([]);
   const [eventStatus, setEventStatus] = useState('loading');
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let active = true;
+    setEventStatus('loading');
     if (API) axios.get(`${API}/users`).then(({ data }) => {
       if (active && Array.isArray(data)) setUsers(data);
     }).catch(() => {});
@@ -26,7 +28,7 @@ export default function Home() {
       setEventStatus(found.length ? 'ready' : 'empty');
     }).catch(() => { if (active) setEventStatus('unavailable'); });
     return () => { active = false; };
-  }, []);
+  }, [attempt]);
 
   const user = users[userIndex];
   return (
@@ -42,9 +44,9 @@ export default function Home() {
         <div className="home_section_heading">
           <h2 id="featured-title">Live music in New York</h2>
         </div>
-        {eventStatus === 'loading' && <p>Loading events...</p>}
+        {eventStatus === 'loading' && <p role="status">Loading events...</p>}
         {eventStatus === 'empty' && <p>No events found.</p>}
-        {eventStatus === 'unavailable' && <p>Events are unavailable right now.</p>}
+        {eventStatus === 'unavailable' && <div role="alert"><p>Events are unavailable right now.</p><button className="btn btn-primary" type="button" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>}
         <div className="home_event_grid">
           {events.map(event => {
             const venue = event._embedded?.venues?.[0];
