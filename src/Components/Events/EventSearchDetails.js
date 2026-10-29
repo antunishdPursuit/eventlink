@@ -57,10 +57,10 @@ export default function EventSearchDetails({ event, user = {}, handleAddEvents, 
 
   const eventAnchor = 'event-' + event.id;
   const returnTo = '/events' + location.search + '#' + encodeURIComponent(eventAnchor);
-  return <article className="discovery-event" id={eventAnchor} tabIndex={-1}>
+  return <article className="discovery-event" id={eventAnchor} tabIndex={-1} aria-labelledby={eventAnchor + '-title'}>
     <div className="discovery-event-art">{image && <img key={image} src={image} alt="" className="discovery-event-image" onError={event => { event.currentTarget.hidden = true; }} />}</div>
     <div className="discovery-event-details">
-      <h4>{event.name}</h4>
+      <h3 id={eventAnchor + '-title'}>{event.name}</h3>
       <p>{venue?.name}</p>
       <p>{[venue?.city?.name, venue?.state?.stateCode].filter(Boolean).join(', ')}</p>
       <div className="event-categories">{categories.map(category => <span key={category} className="event-category">{category}</span>)}</div>

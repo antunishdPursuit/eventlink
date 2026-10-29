@@ -1,7 +1,8 @@
 import '../../Css/EventCardCss.css';
 import axios from 'axios';
 import EventSearchDetails from './EventSearchDetails';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3003';
 const stateChoices = [
   ['AL', 'Alabama'], ['AK', 'Alaska'], ['AZ', 'Arizona'], ['AR', 'Arkansas'], ['CA', 'California'], ['CO', 'Colorado'],
@@ -16,13 +17,27 @@ const stateChoices = [
 ];
 
 export default function EventSearch({ user, handleAddEvents, removedEvent, title = 'Find Events' }) {
-  const [query, setQuery] = useState('stateCode=NY');
-  const [state, setState] = useState('NY');
-  const [zip, setZip] = useState('');
+  const [params, setParams] = useSearchParams();
+  const { hash } = useLocation();
+  const requestedZip = params.get('postalCode') || '';
+  const requestedState = params.get('stateCode') || 'NY';
+  const validZip = /^\d{5}$/.test(requestedZip) ? requestedZip : '';
+  const validState = /^[a-z]{2}$/i.test(requestedState) ? requestedState.toUpperCase() : 'NY';
+  const query = validZip ? 'postalCode=' + validZip : 'stateCode=' + validState;
+  const [state, setState] = useState(validZip ? '' : validState);
+  const [zip, setZip] = useState(validZip);
+  const focusedReturn = useRef(null);
   const [events, setEvents] = useState([]);
   const [status, setStatus] = useState('loading');
   const [attempt, setAttempt] = useState(0);
   const [validationError, setValidationError] = useState('');
+  let returnAnchor = '';
+  try { returnAnchor = decodeURIComponent(hash.slice(1)); } catch { /* Ignore malformed external fragments. */ }
+  const returnMissing = status === 'ready' && returnAnchor.startsWith('event-') && !events.some(event => 'event-' + event.id === returnAnchor);
+  useEffect(() => {
+    setState(validZip ? '' : validState);
+    setZip(validZip);
+  }, [validZip, validState]);
   useEffect(() => {
     let active = true;
     setStatus('loading');
@@ -33,6 +48,18 @@ export default function EventSearch({ user, handleAddEvents, removedEvent, title
     }).catch(() => { if (active) setStatus('error'); });
     return () => { active = false; };
   }, [query, attempt]);
+  useEffect(() => {
+    const destination = query + hash;
+    if (status !== 'ready' || !hash || focusedReturn.current === destination) return;
+    let anchor;
+    try { anchor = decodeURIComponent(hash.slice(1)); } catch { return; }
+    const target = document.getElementById(anchor);
+    if (target?.classList.contains('discovery-event')) {
+      target.focus({ preventScroll: true });
+      target.scrollIntoView?.({ block: 'center' });
+      focusedReturn.current = destination;
+    }
+  }, [query, hash, status, events]);
   function search(event) {
     event.preventDefault();
     const value = (zip || state).trim();
@@ -43,7 +70,7 @@ export default function EventSearch({ user, handleAddEvents, removedEvent, title
     setValidationError('');
     const next = zip ? `postalCode=${value}` : `stateCode=${value.toUpperCase()}`;
     if (next === query) setAttempt(value => value + 1);
-    else setQuery(next);
+    else setParams(next);
   }
   return <section className="eventlink-discovery" aria-labelledby="discovery-title">
     <h1 id="discovery-title">{title}</h1>
@@ -53,10 +80,11 @@ export default function EventSearch({ user, handleAddEvents, removedEvent, title
       <button className="btn btn-primary" type="submit">Search events</button>
     </form>
     {validationError && <p className="search-validation" role="alert">{validationError}</p>}
-    <div className="discovery-result-heading"><h3>Search Results</h3>{status === 'ready' && <span>{events.length} {events.length === 1 ? 'event' : 'events'}</span>}</div>
+    <div className="discovery-result-heading"><h2>Search Results</h2>{status === 'ready' && <span>{events.length} {events.length === 1 ? 'event' : 'events'}</span>}</div>
     {status === 'loading' && <p role="status">Loading events...</p>}
     {status === 'error' && <div role="alert"><p>Unable to load events.</p><button type="button" className="btn btn-primary" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>}
-    {status === 'ready' && events.length === 0 && <p>No events found in {query.split('=')[1]}.</p>}
+    {returnMissing && <p role="status">That event is no longer in these results. Try another search.</p>}
+    {status === 'ready' && events.length === 0 && !returnMissing && <p>No events found in {query.split('=')[1]}.</p>}
     {status === 'ready' && events.map(event => <EventSearchDetails key={event.id} event={event} user={user} handleAddEvents={handleAddEvents} removedEvent={removedEvent} />)}
   </section>;
 }

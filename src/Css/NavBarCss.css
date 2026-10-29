@@ -5,6 +5,16 @@
 .nav-right a, .nav-signout { display: inline-flex; align-items: center; min-height: 44px; color: #071c40; font-size: 16px; line-height: 1.5; font-weight: 600; white-space: nowrap; text-decoration: none; }
 .nav-signout { padding: 0; border: 0; background: transparent; font-family: inherit; }
 .nav-signout:disabled { opacity: .6; }
+.nav-account-action { display: flex; align-items: center; gap: 4px; }
+.nav-account { position: relative; }
+.nav-account summary { display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; cursor: pointer; list-style: none; color: var(--eventlink-ink); border-radius: 8px; }
+.nav-account summary::-webkit-details-marker { display: none; }
+.nav-account summary svg { width: 16px; height: 16px; }
+.nav-account summary:focus-visible { outline: 3px solid var(--eventlink-link); outline-offset: 3px; }
+.nav-account[open] summary { background: var(--eventlink-surface); }
+.nav-account-menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 10; min-width: 200px; padding: 12px; border: 1px solid var(--eventlink-border); border-radius: var(--eventlink-radius); background: #fff; box-shadow: 0 4px 16px rgba(13, 44, 76, .07); }
+.nav-account-menu .nav-signout { width: 100%; }
+.nav-account-menu p { font-size: 14px; line-height: 1.5; white-space: normal; margin: 8px 0 0; color: var(--eventlink-ink); }
 .nav-right a[aria-current='page'] { text-decoration: underline; text-underline-offset: 8px; text-decoration-color: var(--eventlink-accent); text-decoration-thickness: 2px; }
 .site-nav a:hover { text-decoration: underline; }
 .site-nav a:focus-visible, .nav-signout:focus-visible { outline: 3px solid #075dbb; outline-offset: 3px; }

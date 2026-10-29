@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { MemoryRouter, Route, Routes, useParams } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useParams, useLocation } from 'react-router-dom';
 import { beforeEach, expect, test, vi } from 'vitest';
 import axios from 'axios';
 import { AuthProvider } from '../AuthContext';
@@ -13,9 +13,11 @@ function Profile() {
   const { id } = useParams();
   return <h1>Profile {id}</h1>;
 }
+function EventDestination() { const location = useLocation(); return <><h1>Events</h1><p>{location.search + location.hash}</p></>; }
 function openAccount(path = '/signin') {
   return render(<MemoryRouter initialEntries={[path]}><AuthProvider><NavBar /><Routes>
     <Route path="/signin" element={<SignIn />} />
+    <Route path="/events" element={<EventDestination />} />
     <Route path="/users/:id" element={<Profile />} />
     <Route path="/users" element={<h1>People directory</h1>} />
     <Route path="/users/new" element={<h1>Create your account</h1>} />
@@ -35,7 +37,7 @@ test('sign-in opens the owner profile and keeps it reachable from People', async
   await enterCredentials();
   expect(await screen.findByRole('heading', { name: 'Profile 7' })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'My profile' })).toHaveAttribute('href', '/users/7');
-  expect(screen.queryByRole('link', { name: 'Create profile' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: 'Create account' })).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('link', { name: 'People' }));
   expect(await screen.findByRole('heading', { name: 'People directory' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('link', { name: 'My profile' }));
@@ -46,8 +48,9 @@ test.each(['/users/2', '/'])('My profile uses the authenticated owner while view
   axios.get.mockResolvedValueOnce({ data: { userId: 7 } });
   openAccount(path);
   expect(await screen.findByRole('link', { name: 'My profile' })).toHaveAttribute('href', '/users/7');
+  fireEvent.click(screen.getByLabelText('Account menu'));
   expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument();
-  expect(screen.queryByRole('link', { name: 'Create profile' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: 'Create account' })).not.toBeInTheDocument();
 });
 
 test('an existing session visiting sign-in opens its own profile', async () => {
@@ -59,8 +62,40 @@ test('an existing session visiting sign-in opens its own profile', async () => {
 
 test('a new visitor can reach registration directly from the sign-in card', () => {
   openAccount();
-  fireEvent.click(within(screen.getByText('New here?')).getByRole('link', { name: 'Create profile' }));
+  fireEvent.click(within(screen.getByText('New here?')).getByRole('link', { name: 'Create account' }));
   expect(screen.getByRole('heading', { name: 'Create your account' })).toBeInTheDocument();
+});
+
+test('sign-in restores a pending search and event without automatically saving', async () => {
+  axios.post.mockResolvedValueOnce({ data: { userId: 7 } });
+  openAccount('/signin?returnTo=' + encodeURIComponent('/events?postalCode=98101#event-show-2'));
+  expect(screen.getByRole('link', { name: 'Create account' })).toHaveAttribute('href', '/users/new?returnTo=' + encodeURIComponent('/events?postalCode=98101#event-show-2'));
+  await enterCredentials();
+  expect(await screen.findByRole('heading', { name: 'Events' })).toBeInTheDocument();
+  expect(screen.getByText('?postalCode=98101#event-show-2')).toBeInTheDocument();
+  expect(axios.post).toHaveBeenCalledTimes(1);
+  expect(axios.post.mock.calls[0][0]).toMatch(/\/auth\/login$/);
+});
+
+test('an external return URL falls back to the authenticated profile', async () => {
+  axios.post.mockResolvedValueOnce({ data: { userId: 7 } });
+  openAccount('/signin?returnTo=' + encodeURIComponent('https://example.com/steal'));
+  await enterCredentials();
+  expect(await screen.findByRole('heading', { name: 'Profile 7' })).toBeInTheDocument();
+});
+
+test('account menu keeps sign-out out of primary navigation and surfaces failure', async () => {
+  axios.get.mockResolvedValueOnce({ data: { userId: 7 } });
+  axios.post.mockRejectedValueOnce(new Error('Offline'));
+  openAccount('/');
+  await screen.findByRole('link', { name: 'My profile' });
+  expect(screen.getByLabelText('Account menu').closest('details')).not.toHaveAttribute('open');
+  fireEvent.click(screen.getByLabelText('Account menu'));
+  fireEvent.click(screen.getByRole('button', { name: 'Sign out' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent('Unable to sign out');
+  fireEvent.keyDown(screen.getByLabelText('Account menu'), { key: 'Escape' });
+  expect(screen.getByLabelText('Account menu').closest('details')).not.toHaveAttribute('open');
+  expect(screen.getByLabelText('Account menu')).toHaveFocus();
 });
 
 test.each([

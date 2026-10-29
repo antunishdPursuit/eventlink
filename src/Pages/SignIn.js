@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { accountDestination, accountLink, eventReturnTo } from '../accountNavigation';
 
 export default function SignIn() {
   const { signIn, authPending, userId, sessionLoading } = useAuth();
   const navigate = useNavigate();
+  const { search } = useLocation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,7 +18,7 @@ export default function SignIn() {
     if (submitting || authPending || sessionLoading) return;
     setError('');
     setSubmitting(true);
-    try { const result = await signIn(username, password); if (result.applied && mounted.current) navigate(`/users/${result.userId}`); }
+    try { const result = await signIn(username, password); if (result.applied && mounted.current) navigate(accountDestination(search, result.userId), { replace: true }); }
     catch (failure) {
       const status = failure.response?.status;
       const message = status === 401 ? 'Incorrect username or password.'
@@ -28,10 +30,10 @@ export default function SignIn() {
     }
     finally { if (mounted.current) setSubmitting(false); }
   }
-  if (!sessionLoading && userId != null) return <Navigate to={`/users/${userId}`} replace />;
+  if (!sessionLoading && userId != null) return <Navigate to={accountDestination(search, userId)} replace />;
   return <section className="container account-page sign-in-page">
     <form className="auth-form" onSubmit={submit} aria-busy={submitting}>
-      <header className="account-header"><h1>Sign In</h1><p>Open your profile and saved events</p></header>
+      <header className="account-header"><h1>Sign In</h1><p>{eventReturnTo(search) ? 'Sign in to save this event' : 'Open your profile and saved events'}</p></header>
       {sessionLoading && <p role="status">Checking your account...</p>}
       <div className="auth-field">
       <label htmlFor="login-name">Username</label>
@@ -43,7 +45,7 @@ export default function SignIn() {
       </div>
       {error && <p role="alert">{error}</p>}
       <button className="btn btn-primary" type="submit" disabled={submitting || authPending || sessionLoading}>{submitting ? 'Signing in...' : 'Sign In'}</button>
-      <p className="auth-switch">New here? <Link to="/users/new">Create profile</Link></p>
+      <p className="auth-switch">New here? <Link to={accountLink('/users/new', search)}>Create account</Link></p>
     </form>
   </section>;
 }

@@ -12,7 +12,8 @@ test('renders the home route inside the application router', async () => {
   render(<MemoryRouter initialEntries={['/']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
   expect(screen.getByRole('heading', { name: /find your next live experience/i })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /explore events/i })).toHaveAttribute('href', '/events');
-  expect(screen.getByRole('link', { name: /create profile/i })).toHaveAttribute('href', '/users/new');
+  expect(screen.queryByRole('link', { name: /create account/i })).not.toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Sign in', exact: true })).toHaveAttribute('href', '/signin');
 });
 
 test('Explore events opens public discovery rather than the people directory', async () => {
@@ -26,8 +27,8 @@ test('Explore events opens public discovery rather than the people directory', a
 test('resets scrolling when navigating to another page', async () => {
   render(<MemoryRouter initialEntries={['/about']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
   window.scrollTo.mockClear();
-  fireEvent.click(screen.getByRole('link', { name: 'Create profile' }));
-  expect(await screen.findByRole('heading', { name: 'Create Profile' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('link', { name: 'Sign in', exact: true }));
+  expect(await screen.findByRole('heading', { name: 'Sign In' })).toBeInTheDocument();
   await waitFor(() => expect(window.scrollTo).toHaveBeenCalledWith(0, 0));
 });
 
