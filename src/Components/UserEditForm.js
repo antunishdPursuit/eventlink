@@ -87,8 +87,8 @@ export default function UserEditForm() {
       {error && <p className="form-feedback" role="alert">{error}</p>}
       <div className="profile-form-actions"><button type="button" className="btn btn-secondary" onClick={() => navigate('/users/' + id)} disabled={submitting || deleting}>Cancel</button><button type="submit" className="btn btn-primary profile-submit" disabled={submitting || deleting}>{submitting ? 'Saving...' : 'Save changes'}</button></div>
     </form>}
-    {status === 'ready' && <details className="account-settings"><summary>Account settings</summary><h2>Delete profile</h2><p>Permanently remove your profile and all saved events. This cannot be undone.</p>
-      <DeleteControl label="Delete profile" description="Your profile and all saved events will be permanently deleted." disabled={submitting || authPending} onPendingChange={setDeleting} onDelete={async () => {
+    {status === 'ready' && <details className="account-settings"><summary>Account settings</summary>
+      <DeleteControl label="Delete profile" description="Permanently remove your profile and all saved events? This cannot be undone." disabled={submitting || authPending} onPendingChange={setDeleting} onDelete={async () => {
         const result = await deleteProfile(id);
         if (result.applied && activeProfile.current === id) navigate('/users');
       }} />
