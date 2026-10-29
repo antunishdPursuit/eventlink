@@ -1,93 +1,90 @@
-import ProfileFields from "./ProfileFields";
-import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
+import ProfileFields from './ProfileFields';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { isProfileImageUrl } from '../profileFormUtils';
+import { useAuth } from '../AuthContext';
 
-function UsersNewForm() {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().split('T')[0]; // Format as yyyy-mm-dd
-    const [selectedImage, setSelectedImage] = useState('');
-    const [previewError, setPreviewError] = useState(false);
-    const [user, setUser] = useState({
-        profile_picture: "",
-        username: "",
-        bio: "",
-        looking_for_group: false,
-        date_created: "",
-    });
+const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3003';
 
-    useEffect(() => {
-        axios
-          .get(`${API}/users/${id}`)
-          .then((response) => {
-            setUser(response.data);
-            setSelectedImage(response.data.profile_picture)
-          })
-          .catch((c) => {
-            console.warn("catch", c);
-          });
-      }, [id]);
+export default function UserEditForm() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { userId, sessionLoading } = useAuth();
+  const isOwner = userId != null && String(userId) === String(id);
+  const [user, setUser] = useState(null);
+  const [status, setStatus] = useState('loading');
+  const [attempt, setAttempt] = useState(0);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [previewError, setPreviewError] = useState(false);
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const activeProfile = useRef(null);
 
+  useEffect(() => {
+    activeProfile.current = id;
+    return () => { activeProfile.current = null; };
+  }, [id]);
 
-  const updateUser = (updatedUser) => {
-    axios
-      .put(`${API}/users/${id}`, updatedUser)
-      .then(
-        () => {
-          navigate(`/users/${id}`);
-        },
-        (error) => console.error(error)
-      )
-      .catch((c) => console.warn("catch", c));
-  };
+  useEffect(() => {
+    if (!isOwner) return;
+    let active = true;
+    setStatus('loading');
+    setSubmitting(false);
+    axios.get(API + '/users/' + id).then(({ data }) => {
+      if (!data?.id) throw new Error('Profile unavailable');
+      if (!active) return;
+      setUser(data);
+      setSelectedImage(data.profile_picture || '');
+      setPreviewError(false);
+      setStatus('ready');
+    }).catch(() => { if (active) setStatus('error'); });
+    return () => { active = false; };
+  }, [id, attempt, isOwner]);
 
-  const handleTextChange = (event) => {
-    if(event.target.id === "profile_picture"){
-        setPreviewError(false);
-        const test = event.target.value.split(".")
-        const test1 = test[test.length - 1]
-        if (test1 === "jpg" || test1 === "jpeg" || test1 === "png" ){
-            // Figured out how to get to the image src but unable to create a deafult picture with there is an invalid src
-            // let imageSrc = event.target.offsetParent.children[2].children[1].children[0].src
-            setSelectedImage(event.target.value);
-        } else setSelectedImage('');
+  function handleTextChange(event) {
+    const { id: field, value } = event.target;
+    if (field === 'profile_picture') {
+      setPreviewError(false);
+      setSelectedImage(isProfileImageUrl(value) ? value : '');
     }
-    setUser({ ...user, [event.target.id]: event.target.value });
-
-  };
-
-
-  const handleCheckboxChange = () => {
-    setUser({ ...user, looking_for_group: !user.looking_for_group });
+    setUser(current => ({ ...current, [field]: value }));
   }
 
-  const handleSubmit = (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
-    const test = user.profile_picture.split(".")
-    const test1 = test[test.length - 1]
-    if (
-      test1 === "jpg" ||
-      test1 === "jpeg" ||
-      test1 === "png" 
-    ) {
-        updateUser(user)
-    } else {
-        window.confirm(".jpg, .jpeg, and .png are the only supported image types.")
+    if (submitting) return;
+    if (!isProfileImageUrl(user.profile_picture)) {
+      setError('Use a link to a JPG, JPEG or PNG image.');
+      return;
     }
-  };
+    setError('');
+    setSubmitting(true);
+    try {
+      await axios.put(API + '/users/' + id, user);
+      if (activeProfile.current === id) navigate('/users/' + id);
+    } catch (failure) {
+      if (activeProfile.current === id) setError(failure.response?.data?.error || 'Unable to save your changes. Please try again.');
+    } finally {
+      if (activeProfile.current === id) setSubmitting(false);
+    }
+  }
 
   return <div className="profile-form-card">
-    <header className="account-header"><h1>Edit profile</h1></header>
-    <form onSubmit={handleSubmit}>
-      <ProfileFields user={user} onTextChange={handleTextChange} onGroupChange={handleCheckboxChange}
-        selectedImage={selectedImage} previewError={previewError}
-        onPreviewError={() => { setSelectedImage(''); setPreviewError(true); }} date={user.date_created?.slice(0, 10) || formattedDate} />
-      <div className="profile-form-actions"><Link to="/users" className="btn btn-secondary">Back</Link><button type="submit" className="btn btn-primary profile-submit">Save changes</button></div>
-    </form>
+    <header className="account-header"><h1>Edit Profile</h1></header>
+    {sessionLoading ? <p role="status">Checking your account...</p> : !isOwner ? <div><p>Only the profile owner can make changes.</p><Link className="btn btn-primary" to={userId == null ? '/signin' : '/users/' + id}>{userId == null ? 'Sign in' : 'Back to profile'}</Link></div> : <>
+    {status === 'loading' && <p role="status">Loading your profile...</p>}
+    {status === 'error' && <div role="alert"><p>Unable to load this profile.</p><button className="btn btn-primary" type="button" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>}
+    {status === 'ready' && <form onSubmit={handleSubmit} aria-busy={submitting}>
+      <fieldset disabled={submitting}>
+        <ProfileFields user={user} onTextChange={handleTextChange}
+          onGroupChange={() => setUser(current => ({ ...current, looking_for_group: !current.looking_for_group }))}
+          selectedImage={selectedImage} previewError={previewError}
+          onPreviewError={() => { setSelectedImage(''); setPreviewError(true); }} date={user.date_created?.slice(0, 10)} />
+      </fieldset>
+      {error && <p className="form-feedback" role="alert">{error}</p>}
+      <div className="profile-form-actions"><button type="button" className="btn btn-secondary" onClick={() => navigate('/users/' + id)} disabled={submitting}>Cancel</button><button type="submit" className="btn btn-primary profile-submit" disabled={submitting}>{submitting ? 'Saving...' : 'Save changes'}</button></div>
+    </form>}
+    </>}
   </div>;
 }
-
-export default UsersNewForm;

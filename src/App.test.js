@@ -19,7 +19,7 @@ test('resets scrolling when navigating to another page', async () => {
   render(<MemoryRouter initialEntries={['/about']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
   window.scrollTo.mockClear();
   fireEvent.click(screen.getByRole('link', { name: 'Create profile' }));
-  expect(await screen.findByRole('heading', { name: 'Create profile' })).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { name: 'Create Profile' })).toBeInTheDocument();
   await waitFor(() => expect(window.scrollTo).toHaveBeenCalledWith(0, 0));
 });
 

@@ -1,3 +1,5 @@
+import { displayProfileDate } from '../profileFormUtils';
+
 export default function ProfileFields({ user, onTextChange, onGroupChange, password, onPasswordChange, selectedImage, previewError, onPreviewError, date }) {
   return <>
     <div className="profile-photo-row">
@@ -32,7 +34,7 @@ export default function ProfileFields({ user, onTextChange, onGroupChange, passw
     </div>
     <div className="profile-field">
       <label htmlFor="date_created">Date created</label>
-      <input id="date_created" className="form-control" type="date" value={date} readOnly required />
+      <input id="date_created" className="form-control" type="text" value={displayProfileDate(date)} readOnly />
     </div>
   </>;
 }

@@ -1,85 +1,63 @@
-import ProfileFields from "./ProfileFields";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import ProfileFields from './ProfileFields';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
+import { isProfileImageUrl, localDateValue } from '../profileFormUtils';
 
-function UsersNewForm() {
-  const { setUserId } = useAuth();
+export default function UserNewForm() {
+  const { register, authPending } = useAuth();
+  const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const currentDate = new Date();
-  const formattedDate = currentDate.toISOString().split('T')[0]; // Format as yyyy-mm-dd
+  const [submitting, setSubmitting] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const [previewError, setPreviewError] = useState(false);
-  const [user, setUser] = useState({
-    profile_picture: "",
-    username: "",
-    bio: "",
-    looking_for_group: false,
-    date_created: formattedDate,
-  });
+  const mounted = useRef(false);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  const [user, setUser] = useState(() => ({
+    profile_picture: '', username: '', bio: '', looking_for_group: false, date_created: localDateValue(),
+  }));
 
-  const addUser = (newUser) => {
-    axios
-      .post(`${API}/auth/register`, { ...newUser, password })
-      .then(
-      (res) => {
-      setUserId(res.data.userId);
-      navigate(`/users/${res.data.userId}`);
-      })
-      .catch((c) => {
-        setError(c.response?.data?.error || 'Unable to create profile.')
-      });
-  };
-
-  const handleTextChange = (event) => {
-    if(event.target.id === "profile_picture"){
+  function handleTextChange(event) {
+    const { id, value } = event.target;
+    if (id === 'profile_picture') {
       setPreviewError(false);
-      const test = event.target.value.split(".")
-      const test1 = test[test.length - 1]
-
-      if (test1 === "jpg" || test1 === "jpeg" || test1 === "png" ){
-          // Figured out how to get to the image src but unable to create a deafult picture with there is an invalid src
-          // let imageSrc = event.target.offsetParent.children[2].children[1].children[0].src
-          setSelectedImage(event.target.value);
-      } else setSelectedImage('');
+      setSelectedImage(isProfileImageUrl(value) ? value : '');
     }
-    setUser({ ...user, [event.target.id]: event.target.value });
-  };
-
-  const handleCheckboxChange = () => {
-    setUser({ ...user, looking_for_group: !user.looking_for_group });
+    setUser(current => ({ ...current, [id]: value }));
   }
 
-  const handleSubmit = (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
-    const test = user.profile_picture.split(".")
-    const test1 = test[test.length - 1]
-    if (
-      test1 === "jpg" ||
-      test1 === "jpeg" ||
-      test1 === "png" 
-    ) {
-        addUser(user)
-    } else {
-        window.confirm(".jpg, .jpeg, and .png are the only supported image types.")
+    if (submitting || authPending) return;
+    if (!isProfileImageUrl(user.profile_picture)) {
+      setError('Use a link to a JPG, JPEG or PNG image.');
+      return;
     }
-  };
+    setError('');
+    setSubmitting(true);
+    try {
+      const result = await register(user, password);
+      if (result.applied && mounted.current) navigate('/users/' + result.userId);
+    } catch (failure) {
+      if (mounted.current) setError(failure.response?.data?.error || 'Unable to create your profile. Please try again.');
+    } finally {
+      if (mounted.current) setSubmitting(false);
+    }
+  }
 
   return <div className="profile-form-card">
-    <header className="account-header"><h1>Create profile</h1><p>Join EventLink and connect with others</p></header>
-    <form onSubmit={handleSubmit}>
-      <ProfileFields user={user} onTextChange={handleTextChange} onGroupChange={handleCheckboxChange}
-        password={password} onPasswordChange={event => setPassword(event.target.value)}
-        selectedImage={selectedImage} previewError={previewError}
-        onPreviewError={() => { setSelectedImage(''); setPreviewError(true); }} date={formattedDate} />
-      {error && <p role="alert">{error}</p>}
-      <button type="submit" className="btn btn-primary profile-submit">Create profile</button>
+    <header className="account-header"><h1>Create Profile</h1><p>Join EventLink and connect with others</p></header>
+    <form onSubmit={handleSubmit} aria-busy={submitting}>
+      <fieldset disabled={submitting || authPending}>
+        <ProfileFields user={user} onTextChange={handleTextChange}
+          onGroupChange={() => setUser(current => ({ ...current, looking_for_group: !current.looking_for_group }))}
+          password={password} onPasswordChange={event => setPassword(event.target.value)}
+          selectedImage={selectedImage} previewError={previewError}
+          onPreviewError={() => { setSelectedImage(''); setPreviewError(true); }} date={user.date_created} />
+      </fieldset>
+      {error && <p className="form-feedback" role="alert">{error}</p>}
+      <button type="submit" className="btn btn-primary profile-submit" disabled={submitting || authPending}>{submitting ? 'Creating profile...' : 'Create Profile'}</button>
     </form>
   </div>;
 }
-
-export default UsersNewForm;
