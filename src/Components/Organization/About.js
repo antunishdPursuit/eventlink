@@ -5,7 +5,7 @@ export default function About() {
     
   return (
     <article>
-        <div class="centering">
+        <div className="centering">
             <h2>My Event Planner Website Journey</h2>
             <div className="paragraph-box">
             <p>I'm excited to share my journey of creating my very own event planner website! 🎉 After spending weeks diving into web development, I've successfully built a simple yet effective event planner app that helps me manage events effortlessly.</p>

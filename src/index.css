@@ -10,11 +10,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  color: var(--neutral-charcoal-gray); /* Replace with your desired color */
-}
-
-
 :root {
   /* Primary Colors */
   --primary-deep-blue: #1E3A8A;

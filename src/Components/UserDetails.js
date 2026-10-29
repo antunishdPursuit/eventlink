@@ -44,7 +44,7 @@ function UserDetails() {
 }
 
   return (
-    <div className="d-flex">
+    <div className="eventlink-profile-layout">
       <div className="flex-grow-1">
         <div className="card mb-3">
           <UserCard user={user} id={id} handleDelete={handleDelete} />

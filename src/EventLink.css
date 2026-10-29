@@ -1,0 +1,39 @@
+:root {
+  --eventlink-ink: #0a2148;
+  --eventlink-link: #075dbb;
+  --eventlink-surface: #f7fbff;
+  --eventlink-border: #ccdfef;
+  --eventlink-radius: 12px;
+  --eventlink-space: 24px;
+}
+
+body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
+.site-main { min-height: 60vh; }
+.site-main > .Users, .site-main > .container, .site-main > article,
+.eventlink-profile-layout { max-width: 1200px; margin: 32px auto; padding: 0 var(--eventlink-space); }
+.site-main .card { border: 1px solid var(--eventlink-border); border-radius: var(--eventlink-radius); background: #fff; overflow: hidden; }
+.site-main .card-body { padding: 20px; }
+.site-main .card-box { width: 100%; margin-bottom: 20px; }
+.site-main .card-img-top { width: 100%; height: 220px; object-fit: cover; }
+.site-main .btn { min-height: 44px; border-radius: 8px; font-weight: 600; }
+.site-main .btn-primary { background: #1e3a8a; border-color: #1e3a8a; }
+.site-main .btn-success { background: #075dbb; border-color: #075dbb; }
+.site-main .form-control { min-height: 44px; border: 1px solid #9ab6cf; border-radius: 8px; }
+.site-main a:focus-visible, .site-main button:focus-visible, .site-main input:focus-visible,
+.site-main select:focus-visible, .site-main textarea:focus-visible { outline: 3px solid #075dbb; outline-offset: 3px; }
+.eventlink-profile-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: var(--eventlink-space); }
+.eventlink-discovery { background: var(--eventlink-surface); border-radius: var(--eventlink-radius); padding: 20px; min-width: 0; }
+.eventlink-discovery .card-body { background: #fff; border: 1px solid var(--eventlink-border); border-radius: var(--eventlink-radius); margin-top: 12px; }
+.eventlink-discovery .event-search-box { max-width: 100%; width: 120px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; }
+.site-main .event-card { max-width: 96px; width: 96px; aspect-ratio: 1; object-fit: cover; }
+.site-main .centering { max-width: 100%; align-items: stretch; }
+.site-main .paragraph-box, .site-main .event-box { max-width: 100%; width: auto; }
+.site-main .event-box { gap: 24px; }
+.site-main .event-image { max-width: 50%; height: auto; object-fit: contain; }
+@media (max-width: 700px) {
+  .site-main > .Users, .site-main > .container, .site-main > article, .eventlink-profile-layout { padding: 0 16px; }
+  .eventlink-profile-layout { grid-template-columns: 1fr; }
+  .eventlink-discovery form { flex-direction: column; gap: 12px; }
+  .site-main .event-box { flex-direction: column; }
+  .site-main .event-image { max-width: 100%; }
+}
