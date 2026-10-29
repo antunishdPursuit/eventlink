@@ -50,10 +50,11 @@ export default function About() {
             </ul>
             <h3>Sharing on GitHub</h3>
             <div className="paragraph-box">
-            <p>I've just pushed my event planner app to GitHub, and you can find the repository <a href="https://github.com/antunishdPursuit/events_attending">here</a>. Feel free to explore the code, provide feedback, or even contribute if you're interested!</p>
+            <p>I've just pushed my event planner app to GitHub, and you can find the repository <a href="https://github.com/antunishdPursuit/eventlink">here</a>. Feel free to explore the code, provide feedback, or even contribute if you're interested!</p>
             <p>Thank you for joining me on this journey. I'm thrilled to have created a functional event planner website, and I'm excited to see how it evolves in the future. 🚀</p>
             </div>
         </div>
     </article>
   );
 }
+

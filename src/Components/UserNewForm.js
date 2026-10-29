@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from '../AuthContext';
-const API = process.env.REACT_APP_API_URL;
+const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
 
 function UsersNewForm() {
   const { setUserId } = useAuth();

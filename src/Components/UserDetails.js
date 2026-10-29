@@ -6,7 +6,7 @@ import EventSearch from "./Events/EventSearch"
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from '../AuthContext';
-const API = process.env.REACT_APP_API_URL;
+const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
 
 function UserDetails() {
     const { setUserId } = useAuth();

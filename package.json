@@ -2,32 +2,20 @@
   "name": "events_attending",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://antunishdpursuit.github.io/events_attending/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
-    "dotenv": "^16.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
-    "react-scripts": "5.0.1",
+    "react-router-dom": "^7.18.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "predeploy": "npm run build && cp build/index.html build/404.html && touch build/.nojekyll",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "start": "vite --host 127.0.0.1 --port 3225",
+    "build": "vite build",
+    "test": "vitest run"
   },
   "browserslist": {
     "production": [
@@ -42,6 +30,9 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "@vitejs/plugin-react": "^5.2.0",
+    "jsdom": "^27.4.0",
+    "vite": "^7.3.7",
+    "vitest": "^4.1.12"
   }
 }

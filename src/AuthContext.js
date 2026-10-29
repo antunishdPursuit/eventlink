@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import axios from 'axios';
 
 axios.defaults.withCredentials = true;
-const API = process.env.REACT_APP_API_URL;
+const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {

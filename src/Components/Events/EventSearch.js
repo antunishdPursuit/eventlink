@@ -2,7 +2,7 @@ import "../../Css/EventCardCss.css"
 import axios from "axios";
 import EventSearchDetails from "../Events/EventSearchDetails";
 import { useEffect, useState } from "react";
-const API = process.env.REACT_APP_API_URL;
+const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
 
 function UserSearch({user, handleAddEvents, removedEvent}) {
     const [search, setSearch] = useState(`stateCode=NY`)

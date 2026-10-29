@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Event from "../Events/Event";
 
-const API = process.env.REACT_APP_API_URL;
+const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
 
 function Events({newEventToAdd, onEventDeleted}) {
   let { id } = useParams();
