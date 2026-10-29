@@ -59,7 +59,7 @@ function Events({newEventToAdd, onEventDeleted}) {
 
   return (
     <section className="Events">
-        <h2>Events</h2>
+        <h2>Saved events</h2>
         {status === 'loading' && <p role="status">Loading saved events...</p>}
         {status === 'error' && <div role="alert"><p>Unable to load saved events.</p><button className="btn btn-primary" type="button" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>}
         {refreshError && <div role="alert"><p>Unable to refresh saved events.</p><button className="btn btn-primary" type="button" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>}

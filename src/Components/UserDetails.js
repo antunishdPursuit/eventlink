@@ -4,7 +4,7 @@ import UserCard from "./UserCard";
 import Events from "./Events/Events";
 import EventSearch from "./Events/EventSearch"
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useAuth } from '../AuthContext';
 const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:3003";
 
@@ -57,7 +57,8 @@ function UserDetails() {
 
   return (
     <div className="eventlink-profile-layout">
-      <div className="flex-grow-1">
+      <div className="profile-column">
+        <Link to="/users" className="profile-back">Back to people</Link>
         <div className="card profile-card mb-3">
           {user.id ? <UserCard user={user} id={id} handleDelete={handleDelete} /> : profileError ?
             <div className="profile-loading" role="alert"><p>Unable to load profile.</p><button className="btn btn-primary" type="button" onClick={() => setProfileAttempt(value => value + 1)}>Try again</button></div> :

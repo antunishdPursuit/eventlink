@@ -1,37 +1,24 @@
-import "../Css/UserDetailsCss.css"
-import { Link } from "react-router-dom";
+import '../Css/UserDetailsCss.css';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
-function UserCard({ user, id, handleDelete }) {
+export default function UserCard({ user, id, handleDelete }) {
   const { userId } = useAuth();
-  return (
-    <div className="card-body">
-        <div className="profile-identity">
-            <img src={user.profile_picture} alt={user.username} className="rounded-circle user-avatar image-box" />
-            <div className="profile-summary">
-            <h3 className="card-title mt-2">
-                {user.username} {user.looking_for_group && <span className="star">⭐️</span>}
-            </h3>
-        <h6 className="card-text">{user.bio}</h6>
-        <p className="card-text">
-            {new Date(user.date_created).toLocaleDateString()}
-        </p>
-            </div>
-        </div>
-        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-            <Link to={`/users`}>
-                <button className="btn btn-secondary me-md-2">Back</button>
-            </Link>
-            {String(userId) === String(id) && <><Link to={`/users/${id}/edit`}>
-                <button className="btn btn-primary me-md-2">Edit</button>
-            </Link>
-            <Link to={`/users`}>
-                <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
-            </Link>
-            </>}
-        </div>
+  const isOwner = String(userId) === String(id);
+  return <div className="card-body">
+    <div className="profile-controls">
+      {isOwner && <Link to={`/users/${id}/edit`} className="profile-edit-link">Edit profile</Link>}
     </div>
-  );
+    <div className="profile-identity">
+      <img src={user.profile_picture} alt={user.username} className="rounded-circle user-avatar image-box" />
+      <div className="profile-summary">
+        <h3 className="card-title">{user.username} {user.looking_for_group && <span className="star">⭐️</span>}</h3>
+        <p className="card-text">{user.bio}</p>
+      </div>
+    </div>
+    <div className="profile-meta">
+      <p>Date created: {new Date(user.date_created).toLocaleDateString()}</p>
+      {isOwner && <button className="profile-delete" type="button" onClick={handleDelete}>Delete profile</button>}
+    </div>
+  </div>;
 }
-
-export default UserCard;
