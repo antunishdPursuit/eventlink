@@ -8,7 +8,8 @@
 }
 
 body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
-.site-main { min-height: 60vh; }
+.App { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+.site-main { flex: 1; min-height: 0; }
 .site-main > .Users, .site-main > .container, .site-main > article,
 .eventlink-profile-layout { max-width: 1200px; margin: 32px auto; padding: 0 var(--eventlink-space); }
 .site-main .card { border: 1px solid var(--eventlink-border); border-radius: var(--eventlink-radius); background: #fff; overflow: hidden; }
