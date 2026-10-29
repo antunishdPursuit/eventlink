@@ -45,7 +45,7 @@ export default function SignIn() {
       </div>
       {error && <p role="alert">{error}</p>}
       <button className="btn btn-primary" type="submit" disabled={submitting || authPending || sessionLoading}>{submitting ? 'Signing in...' : 'Sign In'}</button>
-      <p className="auth-switch">New here? <Link to={accountLink('/users/new', search)}>Create account</Link></p>
+      <p className="auth-switch">New here? <Link to={accountLink('/users/new', search)} replace>Create account</Link></p>
     </form>
   </section>;
 }

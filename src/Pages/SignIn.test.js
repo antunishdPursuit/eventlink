@@ -1,10 +1,11 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { MemoryRouter, Route, Routes, useParams, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { beforeEach, expect, test, vi } from 'vitest';
 import axios from 'axios';
 import { AuthProvider } from '../AuthContext';
 import NavBar from '../Components/Organization/NavBar';
 import SignIn from './SignIn';
+import UserNewForm from '../Components/UserNewForm';
 
 vi.mock('axios', () => ({ default: { defaults: {}, get: vi.fn(), post: vi.fn() } }));
 beforeEach(() => { vi.resetAllMocks(); axios.get.mockResolvedValue({ data: { userId: null } }); });
@@ -82,6 +83,30 @@ test('an external return URL falls back to the authenticated profile', async () 
   openAccount('/signin?returnTo=' + encodeURIComponent('https://example.com/steal'));
   await enterCredentials();
   expect(await screen.findByRole('heading', { name: 'Profile 7' })).toBeInTheDocument();
+});
+
+test('switching account forms and registering leaves browser Back on the original event search', async () => {
+  axios.post.mockResolvedValueOnce({ data: { userId: 8 } });
+  const continuation = '?returnTo=' + encodeURIComponent('/events?postalCode=98101#event-show-2');
+  function BackControl() { const navigate = useNavigate(); return <button onClick={() => navigate(-1)}>Browser back</button>; }
+  render(<MemoryRouter initialEntries={['/events?postalCode=98101', '/signin' + continuation]}><AuthProvider><BackControl /><Routes>
+    <Route path="/signin" element={<SignIn />} />
+    <Route path="/users/new" element={<UserNewForm />} />
+    <Route path="/events" element={<EventDestination />} />
+  </Routes></AuthProvider></MemoryRouter>);
+  fireEvent.click(screen.getByRole('link', { name: 'Create account' }));
+  fireEvent.click(await screen.findByRole('link', { name: 'Back to sign in' }));
+  fireEvent.click(screen.getByRole('link', { name: 'Create account' }));
+  fireEvent.change(await screen.findByLabelText('Profile picture URL'), { target: { value: 'https://example.com/avatar.png' } });
+  fireEvent.change(screen.getByLabelText('Username'), { target: { value: 'new-account' } });
+  fireEvent.change(screen.getByLabelText(/Password/), { target: { value: 'new-account-password-123' } });
+  fireEvent.change(screen.getByLabelText('Bio'), { target: { value: 'Testing account navigation.' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
+  expect(await screen.findByText('?postalCode=98101#event-show-2')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Browser back' }));
+  expect(await screen.findByText('?postalCode=98101')).toBeInTheDocument();
+  expect(screen.queryByText('?postalCode=98101#event-show-2')).not.toBeInTheDocument();
+  expect(axios.post.mock.calls[0][0]).toMatch(/\/auth\/register$/);
 });
 
 test('account menu keeps sign-out out of primary navigation and surfaces failure', async () => {

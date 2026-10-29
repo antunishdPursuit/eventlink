@@ -1,10 +1,10 @@
 import { act, fireEvent, render as renderComponent, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { beforeEach, expect, test, vi } from 'vitest';
 import axios from 'axios';
 import EventSearchDetails from './EventSearchDetails';
 
-const auth = vi.hoisted(() => ({ userId: 1 }));
+const auth = vi.hoisted(() => ({ userId: 1, setUserId: vi.fn() }));
 vi.mock('../../AuthContext', () => ({ useAuth: () => auth }));
 vi.mock('axios', () => ({ default: { post: vi.fn() } }));
 const first = { id: 'provider-1', name: 'Same artist', url: 'https://example.com/tickets', dates: { start: { localDate: '2027-01-01', localTime: '19:30:00' } } };
@@ -24,6 +24,19 @@ test('deleting one saved show does not clear another show with the same artist',
   view.rerender(rows({ id: 11, artist: 'Same artist' }));
   await waitFor(() => expect(screen.getAllByText('Saved')).toHaveLength(1));
   expect(screen.getByRole('button', { name: 'Add to Saved' })).toBeEnabled();
+});
+
+test('an expired save session clears stale identity and returns to event-specific sign-in', async () => {
+  axios.post.mockRejectedValueOnce({ response: { status: 401 } });
+  function SignInDestination() { const location = useLocation(); return <h1>{location.pathname + location.search}</h1>; }
+  renderComponent(<MemoryRouter initialEntries={['/events?postalCode=98101']}><Routes>
+    <Route path="/events" element={<EventSearchDetails event={first} user={{ id: 1 }} />} />
+    <Route path="/signin" element={<SignInDestination />} />
+  </Routes></MemoryRouter>);
+  fireEvent.click(screen.getByRole('button', { name: 'Add to Saved' }));
+  expect(await screen.findByRole('heading', { name: '/signin?returnTo=' + encodeURIComponent('/events?postalCode=98101#event-provider-1') })).toBeInTheDocument();
+  expect(auth.setUserId).toHaveBeenCalledWith(null);
+  expect(axios.post).toHaveBeenCalledTimes(1);
 });
 
 test('visitors can browse and get an event-specific sign-in action without saving', () => {

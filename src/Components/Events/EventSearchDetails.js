@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../AuthContext';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3003';
 
 export default function EventSearchDetails({ event, user = {}, handleAddEvents, removedEvent }) {
   const location = useLocation();
-  const { userId, authPending } = useAuth();
+  const navigate = useNavigate();
+  const { userId, authPending, setUserId } = useAuth();
   const canAdd = userId != null && String(userId) === String(user.id);
   const venue = event._embedded?.venues?.[0];
   const image = event.images?.find(item => item.ratio === '16_9')?.url || event.images?.[0]?.url;
@@ -48,8 +49,12 @@ export default function EventSearchDetails({ event, user = {}, handleAddEvents, 
       if (scope.current !== requestScope) return;
       setSavedId(data.id);
       handleAddEvents?.(data);
-    } catch (_) {
-      if (scope.current === requestScope) setAddError(true);
+    } catch (error) {
+      if (scope.current !== requestScope) return;
+      if (error.response?.status === 401) {
+        setUserId(null);
+        navigate('/signin?returnTo=' + encodeURIComponent(returnTo));
+      } else setAddError(true);
     } finally {
       if (scope.current === requestScope) { requestScope.pending = false; setAdding(false); }
     }

@@ -64,7 +64,7 @@ export default function UserNewForm() {
       </fieldset>
       {error && <p className="form-feedback" role="alert">{error}</p>}
       <button type="submit" className="btn btn-primary profile-submit" disabled={submitting || authPending}>{submitting ? 'Creating account...' : 'Create account'}</button>
-      <p className="auth-switch"><Link to={accountLink('/signin', search)}>Back to sign in</Link></p>
+      <p className="auth-switch"><Link to={accountLink('/signin', search)} replace>Back to sign in</Link></p>
     </form>
   </div>;
 }
