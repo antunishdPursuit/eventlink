@@ -1,3 +1,4 @@
+import ProfileFields from "./ProfileFields";
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -78,97 +79,15 @@ function UsersNewForm() {
     }
   };
 
-  return (
-    <div className="row justify-content-md-center">
-      <div className="col-md-auto">
-        <h1>Edit profile</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="profile-photo-field col-6">
-              <label htmlFor="profile_picture">Profile Picture:</label>
-              <input
-              id="profile_picture" 
-              type="text" 
-              value={user.profile_picture}
-              onChange={handleTextChange}
-              className="form-control" 
-              placeholder="Image URL"
-              required
-              />
-            <div className="container mt-5" id="imagePreviewParent">
-              <h4>Image preview</h4>
-              <div className="image-preview" id="imagePreview">
-                  {selectedImage && <img onError={() => { setSelectedImage(''); setPreviewError(true); }} src={selectedImage} alt="Preview" className="img-fluid" />}
-                  {previewError && <p role="status">Unable to load image preview.</p>}
-              </div>
-            </div>
-            </div>
-
-            <div className="col-auto">
-              <div className="profile-field">
-                  <label htmlFor="username">Username:</label>
-                  <input
-                  id="username" 
-                  type="text" 
-                  value={user.username}
-                  onChange={handleTextChange}
-                  className="form-control" 
-                  placeholder="Username"
-                  required
-                  />
-              </div>
-
-              <div className="profile-field">
-                  <label htmlFor="bio">Bio:</label>
-                  <input
-                  id="bio" 
-                  type="text" 
-                  value={user.bio}
-                  onChange={handleTextChange}
-                  className="form-control" 
-                  placeholder="Bio"
-                  required
-                  />
-              </div>
-
-              <div className="form-check form-switch">
-                  <input 
-                  id="looking_for_group"
-                  type="checkbox" 
-                  value={user.looking_for_group}
-                  checked={user.looking_for_group}
-                  onChange={handleCheckboxChange}
-                  className="form-check-input" 
-                  />
-                  <label className="form-check-label" htmlFor="looking_for_group">Looking for a Group?</label>
-              </div>
-
-              <div className="profile-field">
-                  <label htmlFor="date_created">Date Created:</label>
-                  <input
-                  id="date_created" 
-                  type="date" 
-                  value={formattedDate}
-                  onChange={handleTextChange}
-                  className="form-control" 
-                  placeholder="date_created:"
-                  readOnly
-                  required
-                  />
-              </div>
-
-              <div className="row mt-3">
-                <div className="col-md-12">
-                  <Link to='/users' className="btn btn-secondary me-2">Back</Link>
-                  <input type="submit" className="btn btn-primary" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+  return <div className="profile-form-card">
+    <header className="account-header"><h1>Edit profile</h1></header>
+    <form onSubmit={handleSubmit}>
+      <ProfileFields user={user} onTextChange={handleTextChange} onGroupChange={handleCheckboxChange}
+        selectedImage={selectedImage} previewError={previewError}
+        onPreviewError={() => { setSelectedImage(''); setPreviewError(true); }} date={user.date_created?.slice(0, 10) || formattedDate} />
+      <div className="profile-form-actions"><Link to="/users" className="btn btn-secondary">Back</Link><button type="submit" className="btn btn-primary profile-submit">Save changes</button></div>
+    </form>
+  </div>;
 }
 
 export default UsersNewForm;

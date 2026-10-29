@@ -7,7 +7,7 @@ vi.mock('../AuthContext', () => ({ useAuth: () => ({ setUserId: vi.fn() }) }));
 
 test('a failed preview stops retrying and can be replaced', () => {
   render(<MemoryRouter><UserNewForm /></MemoryRouter>);
-  const field = screen.getByLabelText('Profile Picture:');
+  const field = screen.getByLabelText('Profile picture URL');
   fireEvent.change(field, { target: { value: 'https://example.com/broken.jpg' } });
   fireEvent.error(screen.getByAltText('Preview'));
   expect(screen.queryByAltText('Preview')).not.toBeInTheDocument();

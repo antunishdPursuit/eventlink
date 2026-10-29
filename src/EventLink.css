@@ -56,27 +56,52 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
 }
 
 /* Account pages */
-.site-main > .account-page { margin: 0 auto; padding: clamp(40px, 6vw, 80px) 24px; }
-.account-page .auth-form, .profile-form-page > .row > .col-md-auto {
-  background: #fff; border: 1px solid var(--eventlink-border); border-radius: 24px;
-  box-shadow: 0 8px 28px rgba(13, 44, 76, .08); padding: clamp(24px, 4vw, 48px);
-}
-.account-page .auth-form { width: 100%; max-width: 520px; margin: 0 auto; gap: 12px; }
-.account-page h1 { color: var(--eventlink-ink); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 750; letter-spacing: -.035em; text-align: center; margin: 0 0 24px; }
+.site-main > .account-page { margin: 0 auto; padding: 88px 24px 48px; width: 100%; }
+.site-main > .sign-in-page { min-height: calc(100dvh - 152px); display: flex; align-items: center; justify-content: center; padding-top: 104px; }
+.account-page .auth-form, .profile-form-card { width: 100%; background: #fff; border: 0; border-radius: 20px; box-shadow: 0 8px 28px rgba(13, 44, 76, .04); }
+.account-page .auth-form { display: block; max-width: 568px; min-height: 512px; margin: 0 auto; padding: 48px 56px 56px; }
+.account-header { text-align: center; margin-bottom: 32px; }
+.account-header h1 { color: var(--eventlink-ink); font-size: 36px; line-height: 1.2; font-weight: 750; letter-spacing: -.035em; margin: 0 0 16px; }
+.account-header p { margin: 0; color: #667085; font-size: 20px; line-height: 1.5; }
 .account-page label { color: var(--eventlink-ink); font-weight: 600; }
-.account-page .auth-form button { margin-top: 12px; }
-.profile-form-page > .row { margin: 0; }
-.profile-form-page > .row > .col-md-auto { width: min(100%, 760px); }
-.profile-form-page form > .row { gap: 24px 0; }
-.profile-form-page form > .row > .col-auto { flex: 1 1 300px; min-width: 0; }
-.profile-form-page #imagePreviewParent { margin-top: 24px !important; padding: 0; }
-.profile-form-page #imagePreviewParent h4 { font-size: 1rem; font-weight: 700; color: var(--eventlink-ink); }
-.profile-form-page .image-preview img { max-height: 220px; border-radius: var(--eventlink-radius); object-fit: cover; }
-.profile-form-page input[type='submit'] { min-height: 44px; min-width: 144px; }
+.auth-field { display: grid; gap: 8px; margin-bottom: 28px; }
+.auth-field label { font-size: 18px; line-height: 22px; }
+.account-page .form-control { min-height: 50px; border-color: #c5cfda; font-size: 18px; padding: 10px 16px; }
+.account-page .form-control::placeholder { color: #8b97aa; }
+.account-page .btn-primary { min-height: 56px; background: linear-gradient(110deg, #0e2b50, #102f58); border-color: #102f58; font-size: 18px; font-weight: 600; }
+.sign-in-page .account-header { margin-bottom: 24px; }
+.sign-in-page .account-header h1 { font-size: 40px; }
+.account-page .auth-form > button { width: 100%; margin-top: 8px; }
+.profile-form-card { max-width: 612px; margin: 0 auto; padding: 32px; }
+.profile-form-card .account-header { margin-bottom: 20px; }
+.profile-form-card .account-header h1 { font-size: 38px; margin-bottom: 8px; }
+.profile-form-card .account-header p { font-size: 18px; }
+.profile-form-page .profile-form-card .profile-field { display: grid; gap: 8px; margin: 0 0 20px !important; min-width: 0; }
+.profile-form-card .form-control { min-height: 46px; font-size: 16px; }
+.profile-field label, .profile-preview-block > span { font-size: 16px; line-height: 24px; font-weight: 600; color: var(--eventlink-ink); }
+.profile-photo-row { display: grid; grid-template-columns: minmax(0, 1fr) 124px; gap: 24px; margin-bottom: 32px; }
+.profile-form-page .profile-photo-row .profile-field { margin-bottom: 0 !important; }
+.profile-preview-block { position: relative; }
+.profile-form-page .profile-preview-block .image-preview { position: absolute; top: 32px; width: 104px; height: 104px; border-radius: 50%; background: #e5e9ed; overflow: hidden; }
+.profile-form-page .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+.profile-preview-block svg { width: 100%; height: 100%; fill: #98a4ac; }
+.profile-form-card textarea.form-control { min-height: 72px; resize: vertical; }
+.profile-group-check { display: flex; gap: 12px; align-items: center; margin: 0 0 20px; }
+.profile-group-check input { width: 22px; height: 22px; accent-color: var(--eventlink-link); }
+.profile-form-card input[readonly] { background: #e9edf3; color: #475467; }
+.profile-form-card .profile-submit { width: 100%; }
+.profile-form-actions { display: flex; gap: 12px; align-items: center; }
+.profile-form-actions .btn { flex: 1; min-height: 56px; display: inline-flex; align-items: center; justify-content: center; }
+.field-hint { font-size: 13px; font-weight: 400; }
 @media (max-width: 700px) {
   .site-main > .account-page { padding: 32px 16px; }
-  .profile-form-page form > .row > .col-6, .profile-form-page form > .row > .col-auto { width: 100%; flex: 0 0 100%; }
-  .profile-form-page > .row > .col-md-auto { padding: 24px 20px; }
+  .account-page .auth-form { min-height: 0; padding: 32px 24px; }
+  .account-header h1, .sign-in-page .account-header h1, .profile-form-card .account-header h1 { font-size: 32px; }
+  .account-header p { font-size: 18px; }
+  .profile-form-card { padding: 28px 20px; }
+  .profile-photo-row { grid-template-columns: minmax(0, 1fr) 80px; gap: 16px; }
+  .profile-form-page .profile-preview-block .image-preview { width: 80px; height: 80px; }
+  .profile-form-actions { flex-wrap: wrap; }
 }
 
 /* People directory */

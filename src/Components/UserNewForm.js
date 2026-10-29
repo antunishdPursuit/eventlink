@@ -1,3 +1,4 @@
+import ProfileFields from "./ProfileFields";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -68,97 +69,17 @@ function UsersNewForm() {
     }
   };
 
-  return (
-    <div className="row justify-content-md-center">
-      <div className="col-md-auto">
-        <h1>Create profile</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="profile-photo-field col-6">
-                  <label htmlFor="profile_picture">Profile Picture:</label>
-                  <input
-                  id="profile_picture" 
-                  type="text" 
-                  value={user.profile_picture}
-                  onChange={handleTextChange}
-                  className="form-control" 
-                  placeholder="Image URL"
-                  required
-                  />
-              <div className="container mt-5" id="imagePreviewParent">
-                  <h4>Image preview</h4>
-                  <div className="image-preview" id="imagePreview">
-                      {selectedImage && <img onError={() => { setSelectedImage(''); setPreviewError(true); }} src={selectedImage} alt="Preview" className="img-fluid" />}
-                      {previewError && <p role="status">Unable to load image preview.</p>}
-                  </div>
-              </div>
-            </div>
-
-            <div className="col-auto">
-              <div className="profile-field">
-                <label htmlFor="username">Username:</label>
-                <input
-                id="username" 
-                type="text" 
-                value={user.username}
-                onChange={handleTextChange}
-                className="form-control" 
-                placeholder="Username"
-                required
-                />
-              </div>
-              <div className="profile-field">
-                <label htmlFor="password">Password (at least 12 characters)</label>
-                <input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="form-control" placeholder="Password" minLength={12} maxLength={256} autoComplete="new-password" required />
-              </div>
-              {error && <p role="alert">{error}</p>}
-
-              <div className="profile-field">
-                <label htmlFor="bio">Bio:</label>
-                <input
-                id="bio" 
-                type="text" 
-                value={user.bio}
-                onChange={handleTextChange}
-                className="form-control" 
-                placeholder="Bio"
-                required
-                />
-              </div>
-
-              <div className="form-check form-switch">
-                <input 
-                id="looking_for_group"
-                type="checkbox" 
-                value={user.looking_for_group}
-                checked={user.looking_for_group}
-                onChange={handleCheckboxChange}
-                className="form-check-input" 
-                />
-                <label className="form-check-label" htmlFor="looking_for_group">Looking for a Group?</label>
-              </div>
-
-              <div className="profile-field">
-                <label htmlFor="date_created">Date Created:</label>
-                <input
-                id="date_created" 
-                type="date" 
-                value={formattedDate}
-                onChange={handleTextChange}
-                className="form-control" 
-                placeholder="date_created:"
-                readOnly
-                required
-                />
-              </div>
-
-              <input type="submit" className="btn btn-primary" />
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+  return <div className="profile-form-card">
+    <header className="account-header"><h1>Create profile</h1><p>Join EventLink and connect with others</p></header>
+    <form onSubmit={handleSubmit}>
+      <ProfileFields user={user} onTextChange={handleTextChange} onGroupChange={handleCheckboxChange}
+        password={password} onPasswordChange={event => setPassword(event.target.value)}
+        selectedImage={selectedImage} previewError={previewError}
+        onPreviewError={() => { setSelectedImage(''); setPreviewError(true); }} date={formattedDate} />
+      {error && <p role="alert">{error}</p>}
+      <button type="submit" className="btn btn-primary profile-submit">Create profile</button>
+    </form>
+  </div>;
 }
 
 export default UsersNewForm;

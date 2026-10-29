@@ -13,13 +13,17 @@ export default function SignIn() {
     try { await signIn(username, password); navigate('/users'); }
     catch (_) { setError('Unable to sign in. Check your details and try again.'); }
   }
-  return <section className="container account-page">
+  return <section className="container account-page sign-in-page">
     <form className="auth-form" onSubmit={submit}>
-      <h1>Sign in</h1>
+      <header className="account-header"><h1>Sign in</h1><p>Welcome back to EventLink</p></header>
+      <div className="auth-field">
       <label htmlFor="login-name">Username</label>
-      <input className="form-control" id="login-name" autoComplete="username" value={username} onChange={event => setUsername(event.target.value)} required />
+      <input className="form-control" id="login-name" autoComplete="username" placeholder="Enter your username" value={username} onChange={event => setUsername(event.target.value)} required />
+      </div>
+      <div className="auth-field">
       <label htmlFor="login-password">Password</label>
-      <input className="form-control" id="login-password" type="password" autoComplete="current-password" value={password} onChange={event => setPassword(event.target.value)} required />
+      <input className="form-control" id="login-password" type="password" autoComplete="current-password" placeholder="Enter your password" value={password} onChange={event => setPassword(event.target.value)} required />
+      </div>
       {error && <p role="alert">{error}</p>}
       <button className="btn btn-primary" type="submit">Sign in</button>
     </form>
