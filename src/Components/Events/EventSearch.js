@@ -8,35 +8,31 @@ function UserSearch({user, handleAddEvents, removedEvent}) {
     const [search, setSearch] = useState(`stateCode=NY`)
     const [eventsTicketmaster, setEventsTicketmaster] = useState([])
     const [noEvents, setNoEvents] = useState(false)
+    const [searchError, setSearchError] = useState(false)
+    const [attempt, setAttempt] = useState(0)
     const [isLoading, setIsLoading] = useState(true);
 
   
     // Fetch data and update state
     useEffect(() => {
-      fetchData(API,search); // Function to fetch data
-    }, [search]);
-  
-    async function fetchData(api,search) {
-      try {
-            // sort=name,desc&
-            axios
-            .get(`${api}/api/events?size=10&${search}`)
-            .then((response) => {
-                setEventsTicketmaster(response.data.events || [])
-                setIsLoading(false);
-                setNoEvents(false)
-
-            })
-            .catch((c) => {
-                setNoEvents(true)
-                setIsLoading(false)
-                console.warn("catch", c);
-            });
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setIsLoading(false);
-      }
-    }
+      let active = true;
+      setIsLoading(true);
+      setSearchError(false);
+      axios.get(`${API}/api/events?size=10&${search}`)
+        .then(({ data }) => {
+          if (!active) return;
+          const events = data.events || [];
+          setEventsTicketmaster(events);
+          setNoEvents(events.length === 0);
+        })
+        .catch(() => {
+          if (active) setSearchError(true);
+        })
+        .finally(() => {
+          if (active) setIsLoading(false);
+        });
+      return () => { active = false; };
+    }, [search, attempt]);
 
 
     function searchState(event) {
@@ -84,8 +80,10 @@ function UserSearch({user, handleAddEvents, removedEvent}) {
             {isLoading ? (
                 <p>Loading...</p>
             ) : (
-                noEvents ?
-                <h1>No events in Area: {search.split('=')[1]}</h1>
+                searchError ?
+                <div role="alert"><p>Unable to load events.</p><button type="button" className="btn btn-primary" onClick={() => setAttempt(value => value + 1)}>Try again</button></div>
+                : noEvents ?
+                <p>No events found in {search.split('=')[1]}.</p>
                 :
                 eventsTicketmaster.map(event => (
                     <EventSearchDetails key={event.id} event={event} user={user} handleAddEvents={handleAddEvents} removedEvent={removedEvent}/>
