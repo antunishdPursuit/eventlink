@@ -57,6 +57,8 @@ function Users() {
 
   return (
     <div className="people-directory">
+        <div className="people-toolbar">
+        <h1 className="people-heading">People</h1>
         <div className="sort-box">
             {/* Sort box */}
             <div className="card sort-box-2">
@@ -99,6 +101,7 @@ function Users() {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         {/* Displaying Users */}
         {status === 'loading' && <p role="status">Loading people...</p>}

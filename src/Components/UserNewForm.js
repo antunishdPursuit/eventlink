@@ -74,17 +74,17 @@ function UsersNewForm() {
         <h1>Create profile</h1>
         <form onSubmit={handleSubmit}>
           <div className="row">
-            <div className="form-floating col-6">
+            <div className="profile-photo-field col-6">
+                  <label htmlFor="profile_picture">Profile Picture:</label>
                   <input
                   id="profile_picture" 
                   type="text" 
                   value={user.profile_picture}
                   onChange={handleTextChange}
                   className="form-control" 
-                  placeholder="profile_picture"
+                  placeholder="Image URL"
                   required
                   />
-                  <label htmlFor="profile_picture">Profile Picture:</label>
               <div className="container mt-5" id="imagePreviewParent">
                   <h4>Image preview</h4>
                   <div className="image-preview" id="imagePreview">
@@ -93,39 +93,39 @@ function UsersNewForm() {
                   </div>
               </div>
             </div>
-              <br></br>
+
             <div className="col-auto">
-              <div className="form-floating">
+              <div className="profile-field">
+                <label htmlFor="username">Username:</label>
                 <input
                 id="username" 
                 type="text" 
                 value={user.username}
                 onChange={handleTextChange}
                 className="form-control" 
-                placeholder="username:"
+                placeholder="Username"
                 required
                 />
-                <label htmlFor="username">Username:</label>
               </div>
-              <div className="form-floating mt-3">
-                <input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="form-control" placeholder="Password" minLength={12} maxLength={256} autoComplete="new-password" required />
+              <div className="profile-field">
                 <label htmlFor="password">Password (at least 12 characters)</label>
+                <input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="form-control" placeholder="Password" minLength={12} maxLength={256} autoComplete="new-password" required />
               </div>
               {error && <p role="alert">{error}</p>}
-                <br></br>
-              <div className="form-floating">
+
+              <div className="profile-field">
+                <label htmlFor="bio">Bio:</label>
                 <input
                 id="bio" 
                 type="text" 
                 value={user.bio}
                 onChange={handleTextChange}
                 className="form-control" 
-                placeholder="bio"
+                placeholder="Bio"
                 required
                 />
-                <label htmlFor="bio">Bio:</label>
               </div>
-                <br></br>
+
               <div className="form-check form-switch">
                 <input 
                 id="looking_for_group"
@@ -137,8 +137,9 @@ function UsersNewForm() {
                 />
                 <label className="form-check-label" htmlFor="looking_for_group">Looking for a Group?</label>
               </div>
-                <br></br>
-              <div className="form-floating">
+
+              <div className="profile-field">
+                <label htmlFor="date_created">Date Created:</label>
                 <input
                 id="date_created" 
                 type="date" 
@@ -149,9 +150,8 @@ function UsersNewForm() {
                 readOnly
                 required
                 />
-                <label htmlFor="date_created">Date Created:</label>
               </div>
-                <br></br>
+
               <input type="submit" className="btn btn-primary" />
             </div>
           </div>

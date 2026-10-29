@@ -29,7 +29,7 @@ function UsersNewForm() {
             console.warn("catch", c);
           });
       }, [id]);
-  
+
 
   const updateUser = (updatedUser) => {
     axios
@@ -84,17 +84,17 @@ function UsersNewForm() {
         <h1>Edit profile</h1>
         <form onSubmit={handleSubmit}>
           <div className="row">
-            <div className="form-floating col-6">
+            <div className="profile-photo-field col-6">
+              <label htmlFor="profile_picture">Profile Picture:</label>
               <input
               id="profile_picture" 
               type="text" 
               value={user.profile_picture}
               onChange={handleTextChange}
               className="form-control" 
-              placeholder="profile_picture"
+              placeholder="Image URL"
               required
               />
-              <label htmlFor="profile_picture">Profile Picture:</label>
             <div className="container mt-5" id="imagePreviewParent">
               <h4>Image preview</h4>
               <div className="image-preview" id="imagePreview">
@@ -103,34 +103,34 @@ function UsersNewForm() {
               </div>
             </div>
             </div>
-            <br></br>
+
             <div className="col-auto">
-              <div className="form-floating">
+              <div className="profile-field">
+                  <label htmlFor="username">Username:</label>
                   <input
                   id="username" 
                   type="text" 
                   value={user.username}
                   onChange={handleTextChange}
                   className="form-control" 
-                  placeholder="username:"
+                  placeholder="Username"
                   required
                   />
-                  <label htmlFor="username">Username:</label>
               </div>
-                  <br></br>
-              <div className="form-floating">
+
+              <div className="profile-field">
+                  <label htmlFor="bio">Bio:</label>
                   <input
                   id="bio" 
                   type="text" 
                   value={user.bio}
                   onChange={handleTextChange}
                   className="form-control" 
-                  placeholder="bio"
+                  placeholder="Bio"
                   required
                   />
-                  <label htmlFor="bio">Bio:</label>
               </div>
-                  <br></br>
+
               <div className="form-check form-switch">
                   <input 
                   id="looking_for_group"
@@ -142,8 +142,9 @@ function UsersNewForm() {
                   />
                   <label className="form-check-label" htmlFor="looking_for_group">Looking for a Group?</label>
               </div>
-                  <br></br>
-              <div className="form-floating">
+
+              <div className="profile-field">
+                  <label htmlFor="date_created">Date Created:</label>
                   <input
                   id="date_created" 
                   type="date" 
@@ -154,9 +155,8 @@ function UsersNewForm() {
                   readOnly
                   required
                   />
-                  <label htmlFor="date_created">Date Created:</label>
               </div>
-                  <br></br>
+
               <div className="row mt-3">
                 <div className="col-md-12">
                   <Link to='/users' className="btn btn-secondary me-2">Back</Link>
