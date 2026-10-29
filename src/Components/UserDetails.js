@@ -5,11 +5,14 @@ import Events from "./Events/Events";
 import EventSearch from "./Events/EventSearch"
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from '../AuthContext';
 const API = process.env.REACT_APP_API_URL;
 
 function UserDetails() {
+    const { setUserId } = useAuth();
     const [user, setUser] = useState([]);
     const [newEventToAdd, setNewEventToAdd] = useState({})
+    const [removedEvent, setRemovedEvent] = useState(null);
     let navigate = useNavigate();
     let { id } = useParams();
  
@@ -32,6 +35,7 @@ function UserDetails() {
     axios
       .delete(`${API}/users/${id}`)
       .then(() => {
+        setUserId(null);
         navigate(`/users`);
       },
         (error) => console.error(error)
@@ -48,11 +52,11 @@ function UserDetails() {
       <div className="flex-grow-1">
         <div className="card mb-3">
           <UserCard user={user} id={id} handleDelete={handleDelete} />
-          <Events newEventToAdd={newEventToAdd} />
+          <Events newEventToAdd={newEventToAdd} onEventDeleted={setRemovedEvent} />
         </div>
       </div>
       <div className="d-flex flex-column justify-content-between">
-        <EventSearch user={user} handleAddEvents={handleAddEvents} />
+        <EventSearch user={user} handleAddEvents={handleAddEvents} removedEvent={removedEvent} />
       </div>
     </div>
   );

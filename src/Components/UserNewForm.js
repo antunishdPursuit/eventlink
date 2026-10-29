@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from '../AuthContext';
 const API = process.env.REACT_APP_API_URL;
 
 function UsersNewForm() {
+  const { setUserId } = useAuth();
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0]; // Format as yyyy-mm-dd
@@ -18,13 +22,14 @@ function UsersNewForm() {
 
   const addUser = (newUser) => {
     axios
-      .post(`${API}/users`, newUser)
+      .post(`${API}/auth/register`, { ...newUser, password })
       .then(
       (res) => {
-      navigate(`/users`);
+      setUserId(res.data.userId);
+      navigate(`/users/${res.data.userId}`);
       })
       .catch((c) => {
-        console.error("catch", c)
+        setError(c.response?.data?.error || 'Unable to create profile.')
       });
   };
 
@@ -69,7 +74,7 @@ function UsersNewForm() {
   return (
     <div className="row justify-content-md-center">
       <div className="col-md-auto">
-        <h1>New User Item</h1>
+        <h1>Create profile</h1>
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="form-floating col-6">
@@ -104,6 +109,11 @@ function UsersNewForm() {
                 />
                 <label htmlFor="username">Username:</label>
               </div>
+              <div className="form-floating mt-3">
+                <input id="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="form-control" placeholder="Password" minLength={12} maxLength={256} autoComplete="new-password" required />
+                <label htmlFor="password">Password (at least 12 characters)</label>
+              </div>
+              {error && <p role="alert">{error}</p>}
                 <br></br>
               <div className="form-floating">
                 <input

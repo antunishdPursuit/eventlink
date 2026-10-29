@@ -1,7 +1,9 @@
 import "../Css/UserDetailsCss.css"
 import { Link } from "react-router-dom";
+import { useAuth } from '../AuthContext';
 
 function UserCard({ user, id, handleDelete }) {
+  const { userId } = useAuth();
   return (
     <div className="card-body">
         <div className="d-flex flex-column align-items-center mb-3">
@@ -18,12 +20,13 @@ function UserCard({ user, id, handleDelete }) {
             <Link to={`/users`}>
                 <button className="btn btn-secondary me-md-2">Back</button>
             </Link>
-            <Link to={`/users/${id}/edit`}>
+            {String(userId) === String(id) && <><Link to={`/users/${id}/edit`}>
                 <button className="btn btn-primary me-md-2">Edit</button>
             </Link>
             <Link to={`/users`}>
                 <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
             </Link>
+            </>}
         </div>
     </div>
   );

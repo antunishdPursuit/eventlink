@@ -4,7 +4,7 @@ import EventSearchDetails from "../Events/EventSearchDetails";
 import { useEffect, useState } from "react";
 const API = process.env.REACT_APP_API_URL;
 
-function UserSearch({user, handleAddEvents}) {
+function UserSearch({user, handleAddEvents, removedEvent}) {
     const [search, setSearch] = useState(`stateCode=NY`)
     const [eventsTicketmaster, setEventsTicketmaster] = useState([])
     const [noEvents, setNoEvents] = useState(false)
@@ -88,7 +88,7 @@ function UserSearch({user, handleAddEvents}) {
                 <h1>No events in Area: {search.split('=')[1]}</h1>
                 :
                 eventsTicketmaster.map(event => (
-                    <EventSearchDetails key={event.id} event={event} user={user} handleAddEvents={handleAddEvents}/>
+                    <EventSearchDetails key={event.id} event={event} user={user} handleAddEvents={handleAddEvents} removedEvent={removedEvent}/>
                 ))
             )}
         </div>

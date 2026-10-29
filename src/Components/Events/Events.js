@@ -5,7 +5,7 @@ import Event from "../Events/Event";
 
 const API = process.env.REACT_APP_API_URL;
 
-function Events({newEventToAdd}) {
+function Events({newEventToAdd, onEventDeleted}) {
   let { id } = useParams();
   const [events, setEvents] = useState([]);
 
@@ -22,6 +22,7 @@ function Events({newEventToAdd}) {
       .delete(`${API}/users/${id}/events/${eventId}`)
       .then(
         (response) => {
+          onEventDeleted(response.data);
           setEvents((prevEvents) =>
           prevEvents.filter((event) => event.id !== eventId)
         );

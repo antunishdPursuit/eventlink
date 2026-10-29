@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "axios";
+import { useAuth } from '../../AuthContext';
 
 const API = process.env.REACT_APP_API_URL;
 
-function EventSearchDetails( {event, user, handleAddEvents}) {
+function EventSearchDetails( {event, user, handleAddEvents, removedEvent}) {
+  const { userId } = useAuth();
+  const canAdd = userId != null && String(userId) === String(user.id);
   const venue = event._embedded?.venues?.[0];
   const eventImage = event.images?.find((image) => image.ratio === '16_9')?.url || event.images?.[0]?.url;
   const [addedEvents, setAddedEvents] = useState([]);
+  useEffect(() => {
+    if (removedEvent) setAddedEvents(items => items.filter(item => item.artist !== removedEvent.artist));
+  }, [removedEvent]);
   const isEventAdded = addedEvents.some((addedEvent) => addedEvent.artist === event.name);
 
   const handleAdd = () => {
@@ -51,20 +57,20 @@ function EventSearchDetails( {event, user, handleAddEvents}) {
             {!event.priceRanges?.length ? (
             <div className="d-flex flex-column align-items-center">
               <Link to={event.url} className="fs-6 mb-2">Check Price</Link>
-              {!isEventAdded ? (
+              {canAdd && (!isEventAdded ? (
                 <button className="btn btn-success btn-sm" onClick={handleAdd}>Add</button>
               ) : (
                 <p className="fs-6">Event added!</p>
-              )}
+              ))}
             </div>
           ) : (
             <div className="d-flex flex-column align-items-center">
               <Link to={event.url} className="fs-6 mb-2">Tickets:<br/> ${event.priceRanges[0].min} - ${event.priceRanges[0].max}</Link>
-              {!isEventAdded ? (
+              {canAdd && (!isEventAdded ? (
                 <button className="btn btn-success btn-sm" onClick={handleAdd}>Add</button>
               ) : (
                 <p className="fs-6">Event added!</p>
-              )}
+              ))}
             </div>
           )}
         </div>

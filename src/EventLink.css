@@ -30,10 +30,12 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
 .site-main .paragraph-box, .site-main .event-box { max-width: 100%; width: auto; }
 .site-main .event-box { gap: 24px; }
 .site-main .event-image { max-width: 50%; height: auto; object-fit: contain; }
+.auth-form { max-width: 440px; display: grid; gap: 12px; padding: 24px; background: #fff; border: 1px solid var(--eventlink-border); border-radius: var(--eventlink-radius); }
 @media (max-width: 700px) {
   .site-main > .Users, .site-main > .container, .site-main > article, .eventlink-profile-layout { padding: 0 16px; }
   .eventlink-profile-layout { grid-template-columns: 1fr; }
   .eventlink-discovery form { flex-direction: column; gap: 12px; }
+  .site-main .sort-box, .site-main form .row > .col-6 { width: 100%; }
   .site-main .event-box { flex-direction: column; }
   .site-main .event-image { max-width: 100%; }
 }

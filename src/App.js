@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import Edit from "./Pages/Edit";
 import Error from "./Pages/ErrorPage";
 import Home from "./Pages/Home";
+import SignIn from "./Pages/SignIn";
 import Index from "./Pages/Index";
 import New from "./Pages/New";
 import Show from "./Pages/Show";
@@ -22,6 +23,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/users" element={<Index />} />
             <Route path="/users/new" element={<New />} />
+            <Route path="/signin" element={<SignIn />} />
             <Route exact path="/users/:id" element={<Show />} />
             <Route path="/users/:id/edit" element={<Edit />} />
             <Route path="/about" element={<About/>} />

@@ -1,7 +1,9 @@
 import "../../Css/EventCardCss.css"
 import { useState } from "react";
+import { useAuth } from '../../AuthContext';
 
 function User({ event, handleDelete, toggleView }) {
+    const { userId } = useAuth();
     const [selectedImage] = useState(event.artist_picture);
 
     function addDefaultSrc(ev){
@@ -25,8 +27,10 @@ function User({ event, handleDelete, toggleView }) {
                 <h5 className="card-subtitle">In {event.city} at {event.venue}</h5>
                 <p className="card-text">{event.price == null ? 'Price unavailable' : `Min Price: $${event.price}`}</p>
             </div>
-            <button className="btn btn-primary" onClick={toggleView}>Edit</button>
-            <button className="btn btn-danger" onClick={() => handleDelete(event.id)}>Delete</button>
+            {String(userId) === String(event.user_id) && <>
+              <button className="btn btn-primary" onClick={toggleView}>Edit</button>
+              <button className="btn btn-danger" onClick={() => handleDelete(event.id)}>Delete</button>
+            </>}
         </div>
     </div>
   );

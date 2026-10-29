@@ -84,7 +84,7 @@ function UsersNewForm() {
   return (
     <div className="row justify-content-md-center">
       <div className="col-md-auto">
-        <h1>New User Item</h1>
+        <h1>Edit profile</h1>
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="form-floating col-6">
