@@ -1,4 +1,5 @@
 // DEPENDENCIES
+import { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 // PAGES
@@ -16,6 +17,9 @@ import About from "./Components/Organization/About"
 import Footer from "./Components/Organization/Footer";
 function App() {
   const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   return (
     <div className={`App${pathname === '/' ? '' : ' interior-shell'}`}>
         <NavBar />
