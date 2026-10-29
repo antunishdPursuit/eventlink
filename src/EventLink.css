@@ -98,6 +98,8 @@ body { background: #eaf5ff; color: var(--eventlink-ink); line-height: 1.5; }
 .sign-in-page .account-header { margin-bottom: 32px; }
 .sign-in-page .account-header h1 { font-size: 40px; margin-bottom: 8px; }
 .account-page .auth-form > button { width: 100%; margin-top: 8px; }
+.auth-switch { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0 6px; margin: 16px 0 0; font-size: 16px; color: var(--eventlink-muted); }
+.auth-switch a { display: inline-flex; align-items: center; min-height: 44px; color: var(--eventlink-link); }
 .profile-form-card { max-width: 612px; margin: 0 auto; padding: 32px; }
 .profile-form-card .account-header { margin-bottom: 20px; }
 .profile-form-card .account-header h1 { font-size: 38px; margin-bottom: 8px; }
