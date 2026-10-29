@@ -17,7 +17,15 @@ export default function SignIn() {
     setError('');
     setSubmitting(true);
     try { const result = await signIn(username, password); if (result.applied && mounted.current) navigate(`/users/${result.userId}`); }
-    catch (_) { if (mounted.current) setError('Unable to sign in. Check your details and try again.'); }
+    catch (failure) {
+      const status = failure.response?.status;
+      const message = status === 401 ? 'Incorrect username or password.'
+        : status === 429 ? 'Too many sign-in attempts. Wait 15 minutes and try again.'
+        : status === 403 ? 'Sign-in is blocked from this address. Open EventLink at 127.0.0.1:3225 and try again.'
+        : !failure.response ? 'Cannot reach the sign-in service. Please try again.'
+        : 'Sign-in is unavailable right now. Please try again.';
+      if (mounted.current) setError(message);
+    }
     finally { if (mounted.current) setSubmitting(false); }
   }
   if (!sessionLoading && userId != null) return <Navigate to={`/users/${userId}`} replace />;

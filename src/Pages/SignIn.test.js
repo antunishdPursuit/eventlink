@@ -63,11 +63,17 @@ test('a new visitor can reach registration directly from the sign-in card', () =
   expect(screen.getByRole('heading', { name: 'Create your account' })).toBeInTheDocument();
 });
 
-test('failed credentials keep the visitor on sign-in with a usable form', async () => {
-  axios.post.mockRejectedValueOnce(new Error('Invalid sign-in'));
+test.each([
+  [401, 'Incorrect username or password.'],
+  [403, 'Sign-in is blocked from this address.'],
+  [429, 'Too many sign-in attempts.'],
+  [503, 'Sign-in is unavailable right now.'],
+  [null, 'Cannot reach the sign-in service.'],
+])('a sign-in failure (%s) explains its cause and keeps the form usable', async (status, message) => {
+  axios.post.mockRejectedValueOnce(status ? { response: { status } } : new Error('Network error'));
   openAccount();
   await enterCredentials();
-  expect(await screen.findByRole('alert')).toHaveTextContent('Unable to sign in');
+  expect(await screen.findByRole('alert')).toHaveTextContent(message);
   expect(screen.getByLabelText('Username')).toHaveValue('account-owner');
   expect(screen.getByRole('button', { name: 'Sign In' })).toBeEnabled();
   expect(screen.queryByRole('link', { name: 'My profile' })).not.toBeInTheDocument();
