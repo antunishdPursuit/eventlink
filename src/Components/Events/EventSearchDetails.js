@@ -12,12 +12,16 @@ function EventSearchDetails( {event, user, handleAddEvents, removedEvent}) {
   const venue = event._embedded?.venues?.[0];
   const eventImage = event.images?.find((image) => image.ratio === '16_9')?.url || event.images?.[0]?.url;
   const [addedEvents, setAddedEvents] = useState([]);
+  const [addError, setAddError] = useState(false);
+  const [adding, setAdding] = useState(false);
   useEffect(() => {
     if (removedEvent) setAddedEvents(items => items.filter(item => item.artist !== removedEvent.artist));
   }, [removedEvent]);
   const isEventAdded = addedEvents.some((addedEvent) => addedEvent.artist === event.name);
 
   const handleAdd = () => {
+    setAddError(false);
+    setAdding(true);
     const newEvent = {
       artist: event.name,
       venue: venue?.name || '',
@@ -29,15 +33,12 @@ function EventSearchDetails( {event, user, handleAddEvents, removedEvent}) {
 
     axios
       .post(`${API}/users/${user.id}/events`, newEvent)
-      .then(
-        (response) => {
-          setAddedEvents([...addedEvents, newEvent]);
+      .then(() => {
+          setAddedEvents(items => [...items, newEvent]);
           handleAddEvents(newEvent)
-          console.log("success");
-        },
-        (error) => console.error(error)
-      )
-      .catch((c) => console.warn("catch", c));
+        })
+      .catch(() => setAddError(true))
+      .finally(() => setAdding(false));
     };
 
   return (
@@ -58,7 +59,7 @@ function EventSearchDetails( {event, user, handleAddEvents, removedEvent}) {
             <div className="d-flex flex-column align-items-center">
               <Link to={event.url} className="fs-6 mb-2">Check Price</Link>
               {canAdd && (!isEventAdded ? (
-                <button className="btn btn-success btn-sm" onClick={handleAdd}>Add</button>
+                <button className="btn btn-success btn-sm" onClick={handleAdd} disabled={adding}>{adding ? 'Adding...' : 'Add'}</button>
               ) : (
                 <p className="fs-6">Event added!</p>
               ))}
@@ -67,7 +68,7 @@ function EventSearchDetails( {event, user, handleAddEvents, removedEvent}) {
             <div className="d-flex flex-column align-items-center">
               <Link to={event.url} className="fs-6 mb-2">Tickets:<br/> ${event.priceRanges[0].min} - ${event.priceRanges[0].max}</Link>
               {canAdd && (!isEventAdded ? (
-                <button className="btn btn-success btn-sm" onClick={handleAdd}>Add</button>
+                <button className="btn btn-success btn-sm" onClick={handleAdd} disabled={adding}>{adding ? 'Adding...' : 'Add'}</button>
               ) : (
                 <p className="fs-6">Event added!</p>
               ))}
@@ -75,6 +76,7 @@ function EventSearchDetails( {event, user, handleAddEvents, removedEvent}) {
           )}
         </div>
       </div>
+      {addError && <p role="alert">Unable to add event. Please try again.</p>}
     </div>
   );
 }
