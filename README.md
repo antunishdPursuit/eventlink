@@ -1,25 +1,19 @@
-# FrontEnd
+# EventLink
 
-## Deployed on Netlify
-Check out the live version of the FrontEnd deployed on Netlify:  
-[**Netlify App**](https://jade-cuchufli-c759ae.netlify.app/)
+Explore concerts, browse profiles, and save events to your own profile. The React frontend uses the [EventLink backend](https://github.com/antunishdPursuit/EventsBackEnd) for event search and profile data.
 
-## GitHub Repository
-Explore the FrontEnd's source code and contribute on GitHub:  
-[**GitHub Repository**](https://github.com/antunishdPursuit/events_attending)
+## Run locally
 
----
+Start the backend and PostgreSQL using the instructions in its repository. Then, in PowerShell:
 
-# BackEnd
+```powershell
+npm ci
+$env:HOST = '127.0.0.1'
+$env:PORT = '3225'
+$env:REACT_APP_API_URL = 'http://127.0.0.1:3003'
+npm start
+```
 
-## Deployed on Render
-Experience the live BackEnd deployed on Render:  
-[**Render BackEnd**](https://eventsbackend.onrender.com/)
+Open `http://127.0.0.1:3225/events_attending/`. Create a profile with a password to save events and edit that profile. The existing sample profiles remain available to browse.
 
-## GitHub Repository
-Dive into the BackEnd's codebase and collaborate on GitHub:  
-[**GitHub Repository**](https://github.com/antunishdPursuit/EventsBackEnd)
-
----
-
-Explore the deployed applications and their source code. If you have any questions don't hesitate to ask any questions!
+The Ticketmaster API key belongs in the backend environment, not the frontend or the repository.
